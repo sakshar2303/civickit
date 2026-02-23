@@ -1,6 +1,6 @@
 // backend/src/__tests__/setup.ts
 import dotenv from 'dotenv';
-dotenv.config({ path: '.env.test' });
+dotenv.config({ path: '.env.test.local' });
 
 import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
@@ -21,11 +21,11 @@ const prisma = new PrismaClient({ adapter });
 beforeAll(async () => {
   // Set test database URL
   //process.env.DATABASE_URL = process.env.TEST_DATABASE_URL || 'postgresql://user:password@localhost:5432/civickit_test';
-    
+
   // Reset database and run migrations
   execSync('npx prisma migrate reset --force', {
     //env: { ...process.env, DATABASE_URL: process.env.DATABASE_URL },
-    env: {...process.env},
+    env: { ...process.env },
   });
 });
 
@@ -39,10 +39,10 @@ afterAll(async () => {
 // Clear database between test suites
 afterEach(async () => {
   const tables = ['User', 'Issue', 'Comment', 'Upvote', 'Event', 'EventRsvp'];
-  
+
   for (const table of tables) {
     await prisma.$executeRawUnsafe(`TRUNCATE TABLE "${table}" CASCADE;`);
   }
 });
 
-export {prisma}; //exporting use for tests
+export { prisma }; //exporting use for tests
