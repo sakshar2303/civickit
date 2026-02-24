@@ -61,6 +61,11 @@ app.listen(PORT, () => {
 //Open localtunnel on https://civickit.loca.lt - should be removed later
 (async () => {
   const tunnel = await localtunnel({ port: 3000, subdomain: "civickit" });
-  console.log(tunnel.url)
+  if (tunnel.url == "https://civickit.loca.lt") {
+    console.log("Tunnel opened on", tunnel.url)
+  } else {
+    console.log("Domain taken, tunnel opened on", tunnel.url)
+  }
+
   tunnel.on("close", () => { });
 })();
