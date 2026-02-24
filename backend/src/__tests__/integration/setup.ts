@@ -20,13 +20,15 @@ const prisma = new PrismaClient({ adapter });
 // Runs before all tests
 beforeAll(async () => {
   // Set test database URL
-  //process.env.DATABASE_URL = process.env.TEST_DATABASE_URL || 'postgresql://user:password@localhost:5432/civickit_test';
-
   // Reset database and run migrations
   execSync('npx prisma migrate reset --force', {
-    //env: { ...process.env, DATABASE_URL: process.env.DATABASE_URL },
     env: { ...process.env },
   });
+  /* option to use deploy instead of reset
+    execSync('npx prisma migrate deploy', {
+    env: { ...process.env },
+  });
+  */
 });
 
 // Runs after all tests
