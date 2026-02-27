@@ -13,11 +13,7 @@ export class IssueService {
     // Upload images to Cloudinary if provided
     if (files && files.length > 0) {
       try {
-        uploadedImages = await Promise.all(
-          files.map(file =>
-            uploadImage(file.buffer, file.originalname)
-          )
-        );
+        uploadedImages = await Promise.all(files.map(file => uploadImage(file.buffer)));
       } catch (error) {
         console.error('Cloudinary upload failed:', error);
         throw new Error('Image upload failed');

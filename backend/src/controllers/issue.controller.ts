@@ -10,8 +10,10 @@ export class IssueController {
   async createIssue(req: Request, res: Response, next: NextFunction) {
     try {
       const userId = req.userId!
+      const files = req.body.images as Express.Multer.File[] || [];
+      console.log("req files!!!" + req.body.images);
 
-      const issue = await issueService.createIssue(req.body, userId);
+      const issue = await issueService.createIssue(req.body, userId, files);
       res.status(201).json(issue);
     } catch (error) {
       next(error);
