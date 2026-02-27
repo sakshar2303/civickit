@@ -55,6 +55,17 @@ export default function IssueListScreen() {
     )
   }
 
+  if (location.latitude == undefined ||
+    location.longitude == undefined) {
+    return (
+      <MessageScreen enableRefresh={true}
+        onRefresh={refetch}
+        refreshing={refreshing}>
+        Error: Please Reload
+      </MessageScreen>
+    )
+  }
+
   //check if error has been thrown
   if (error != undefined) {
     return (

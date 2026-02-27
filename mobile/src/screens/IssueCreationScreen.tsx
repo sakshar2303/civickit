@@ -7,17 +7,30 @@ import { userLocation } from '../types/userLocation';
 import { Button, View, StyleSheet, ScrollView, TextInput, Modal, Text, TouchableOpacity, FlatList } from 'react-native';
 import SelectedImage from '../components/SelectedImage';
 import ModalDropdown from '../components/ModalDropdown';
+import ENV from '../config/env';
+
+enum IssueCategory {
+    POTHOLE,
+    STREETLIGHT,
+    GRAFFITI,
+    ILLEGAL_DUMPING,
+    BROKEN_SIDEWALK,
+    TRAFFIC_SIGNAL,
+    OTHER,
+}
 
 export default function IssueCreationScreen() {
     const [images, setImages] = useState<string[]>([]);
     const [location, setLocation] = useState<userLocation | null>(null);
     const [address, setAddress] = useState<string>('Detecting location...');
     const [title, setTitle] = useState<string>("");
-    const [category, setCategory] = useState<"Pothole" | "Steetlight" | "Trash" | "Graffiti" | "Other">();
+    const [category, setCategory] = useState<IssueCategory>();
     const [description, setDescription] = useState<string>("");
     const [submitAllowed, setSubmitAllowed] = useState<boolean>(false)
-    const [key, setKey] = useState(0)
     //TODO: implement tags
+
+    //DO NOT LEAVE THIS HERE, TESTING PURPOSES ONLY
+    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJteS11c2VyIiwiaWF0IjoxNzcyMjE2MTM5LCJleHAiOjE3NzI4MjA5Mzl9.knjn8hY8sTmenxRuQ_hjgpO1q108zNwY0JVqJGhjH7I"
 
     useEffect(() => {
         (async () => {
@@ -77,34 +90,34 @@ export default function IssueCreationScreen() {
     }
 
     const categories = [
-        "Pothole", "Streetlight", "Trash", "Graffiti", "Other"
+        "POTHOLE", "Streetlight", "Trash", "Graffiti", "Other"
     ]
 
-    const placeHolderSubmit = () => {
-        console.log("Submitting Issue...")
-    }
-    // const handleSubmit = async () => {
-    //     const formData = new FormData();
-    //     formData.append('title', title);
-    //     formData.append('description', description);
-    //     formData.append('category', category);
-    //     formData.append('latitude', location!.lat.toString());
-    //     formData.append('longitude', location!.lng.toString());
-    //     images.forEach(uri => {
-    //         formData.append('images', { uri, type: 'image/jpeg', name: 'photo.jpg' } as any);
-    //     });
+    const handleSubmit = async () => {
+        const formData = new FormData();
+        formData.append('title', title);
+        formData.append('description', description);
+        formData.append('category', category!);
+        formData.append('latitude', location!.latitude.toString());
+        formData.append('longitude', location!.longitude.toString());
+        images.forEach(uri => {
+            formData.append('images', { uri, type: 'image/jpeg', name: 'photo.jpg' } as any);
+        });
 
-    //     const response = await fetch('http://localhost:3000/api/issues', {
-    //         method: 'POST',
-    //         headers: { Authorization: `Bearer ${token}` },
-    //         body: formData,
-    //     });
-    //     // Handle response...
-    // };
+        const request = new Request(ENV.apiUrl + '/issues/', {
+            mode: 'cors',
+            headers: { Authorization: `Bearer ${token}` },
+            method: 'POST',
+            body: formData
+        })
+
+        const response = await fetch(request)
+        console.log(response)
+    };
 
     //determine if ready to submit
     if (!submitAllowed &&
-        title.length > 0 &&
+        title.length >= 3 &&
         description.length > 0 &&
         category != null &&
         address != null &&
@@ -113,7 +126,7 @@ export default function IssueCreationScreen() {
         setSubmitAllowed(true)
 
     } else if (submitAllowed && (
-        title.length == 0 ||
+        title.length < 3 ||
         description.length == 0 ||
         category == null ||
         address == null ||
@@ -161,7 +174,7 @@ export default function IssueCreationScreen() {
                 style={styles.textBox}
                 multiline
                 maxLength={500} />
-            <Button title="Submit" onPress={placeHolderSubmit} disabled={!submitAllowed} />
+            <Button title="Submit" onPress={handleSubmit} disabled={!submitAllowed} />
         </View>
     )
 };
