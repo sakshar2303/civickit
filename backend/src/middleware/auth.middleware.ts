@@ -13,15 +13,15 @@ declare global {
 }
 
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
-  
+
   try {
     //get token from Authorization: Bearer header
     const token = String(req.headers.authorization?.substring(7))
-    
+
     //Verify Token
     const secret = String(process.env.JWT_SECRET)
-    const tokenResponse  = jwt.verify(token, secret) as JwtPayload
-    
+    const tokenResponse = jwt.verify(token, secret) as JwtPayload
+
     //attach userId to request
     req.userId = tokenResponse.userId
 
@@ -31,6 +31,6 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
   } catch (error) {
     throw error
   }
-  
-  
+
+
 };
