@@ -10,11 +10,13 @@ export class IssueController {
   async createIssue(req: Request, res: Response, next: NextFunction) {
     try {
       const userId = req.userId!
+      console.log("in contoller", req)
+      const issue = await issueService.createIssue(req.body, userId);
       const files = req.files as Express.Multer.File[] || []
       const latitude = parseFloat(req.body.latitude);
       const longitude = parseFloat(req.body.longitude);
 
-      if (isNaN(latitude) || isNaN(longitude)){
+      if (isNaN(latitude) || isNaN(longitude)) {
         return res.status(400).json({ error: 'Invalid coordinates' });
       }
       //const files = req.body.images as Express.Multer.File[] || [];
