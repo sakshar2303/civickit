@@ -1,14 +1,13 @@
 // mobile/src/screens/IssueDetailScreen.tsx
 import { View, Text, StyleSheet } from 'react-native';
-import { Button } from 'react-native';
 
 //pass issue selected state in so it can be disabled
 export default function IssueDetailScreen({ route }: any) {
-
+  const issue = route.params.issue
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{route.issue.title}</Text>
+      <Text style={styles.title}>{issue.title}</Text>
     </View>
   );
 }
