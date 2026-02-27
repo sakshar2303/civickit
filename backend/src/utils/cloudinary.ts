@@ -1,12 +1,18 @@
 // backend/src/utils/cloudinary.ts
 
 import { v2 as cloudinary } from 'cloudinary';
+import dotenv from "dotenv";
+dotenv.config();
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
     api_key: process.env.CLOUDINARY_API_KEY,
     api_secret: process.env.CLOUDINARY_API_SECRET,
 });
+
+console.log("CLOUD NAME:", process.env.CLOUDINARY_CLOUD_NAME);
+console.log("API KEY:", process.env.CLOUDINARY_API_KEY);
+console.log("API SECRET LENGTH:", process.env.CLOUDINARY_API_SECRET?.length);
 
 export async function uploadImage(fileBuffer: Buffer): Promise<string> {
     return new Promise((resolve, reject) => {
