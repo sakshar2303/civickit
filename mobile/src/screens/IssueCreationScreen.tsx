@@ -101,6 +101,8 @@ export default function IssueCreationScreen() {
 
     }
 
+
+
     const handleSubmit = async () => {
         try {
             const formData = new FormData();
@@ -141,6 +143,12 @@ export default function IssueCreationScreen() {
             if (error.message.includes("latitude") || error.message.includes("longtitude")) {
                 navigation.navigate('Error', { errorMessage: 'Location permission denied' })
                 throw new Error("Location permission denied")
+            } else if (error.message.includes("network")) {
+                navigation.navigate('Error', { errorMessage: 'NetworkError' })
+                throw new Error("Network Error")
+            } else {
+                navigation.navigate('Error', { errorMessage: "There was an error" })
+                throw new Error(error.message)
             }
 
         }
