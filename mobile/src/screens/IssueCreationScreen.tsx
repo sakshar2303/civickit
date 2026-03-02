@@ -185,19 +185,20 @@ export default function IssueCreationScreen() {
 
 
     return (
-        <KeyboardAwareScrollView enableOnAndroid enableAutomaticScroll extraScrollHeight={100} >
+        <KeyboardAwareScrollView enableOnAndroid enableAutomaticScroll extraScrollHeight={100}
+            style={styles.container}>
             <TextInput onChangeText={setTitle}
                 value={title}
-                placeholder='title'
+                placeholder='Issue Title'
                 style={styles.textBox}
                 maxLength={100} />
 
-            <View style={styles.container}>
-                <AntDesign.Button name="camera" onPress={openCamera} iconStyle={styles.button} borderRadius={16} size={24} />
-                <AntDesign.Button name="picture" onPress={pickImage} iconStyle={styles.button} borderRadius={16} size={24} />
+            <View style={styles.buttonRow}>
+                <AntDesign.Button name="camera" onPress={openCamera} iconStyle={styles.imageButton} borderRadius={16} size={24} />
+                <AntDesign.Button name="picture" onPress={pickImage} iconStyle={styles.imageButton} borderRadius={16} size={24} />
             </View>
 
-            <ScrollView style={styles.images}>
+            <ScrollView style={styles.imageContainer}>
                 <FlatList
                     data={images}
                     horizontal
@@ -212,7 +213,7 @@ export default function IssueCreationScreen() {
                 />
             </ScrollView>
 
-            <Text>{address}</Text>
+            <Text style={styles.addressText}>{address}</Text>
 
             <ModalDropdown
                 data={categories}
@@ -221,8 +222,8 @@ export default function IssueCreationScreen() {
 
             <TextInput onChangeText={setDescription}
                 value={description}
-                placeholder='description'
-                style={styles.textBox}
+                placeholder='Issue Description...'
+                style={{ ...styles.textBox, marginBottom: 8 }}
                 multiline
                 maxLength={500}
                 numberOfLines={5}
@@ -237,25 +238,39 @@ export default function IssueCreationScreen() {
 
 
 const styles = StyleSheet.create({
-    images: {
+    container: {
+        padding: 8,
+        backgroundColor: "white"
+    },
+    imageContainer: {
         padding: 12,
         gap: 12,
-        height: 200
+        height: 200,
+        backgroundColor: "#e7e7e7",
+        borderRadius: 16,
+        marginVertical: 4
     },
     textBox: {
-        borderWidth: 1,
-        margin: 4,
-        padding: 4
+        paddingVertical: 8,
+        paddingHorizontal: 12,
+        backgroundColor: "#e7e7e7",
+        borderRadius: 16,
+        marginVertical: 4
     },
-    container: {
+    buttonRow: {
         padding: 4,
         flex: 1,
         gap: 8,
         flexDirection: "row",
         justifyContent: "flex-end",
+        minHeight: 48,
+        marginVertical: 4
     },
-    button: {
-        margin: 4,
+    imageButton: {
         marginLeft: 8
+    },
+    addressText: {
+        paddingHorizontal: 12,
+        marginVertical: 4
     }
 });
