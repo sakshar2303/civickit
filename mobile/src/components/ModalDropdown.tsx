@@ -47,12 +47,12 @@ export default function ModalDropdown({ data, onDataSelect, defaultText }: any) 
 
 const styles = StyleSheet.create({
     container: {
-        margin: 20
+        marginVertical: 4
     },
     button: {
-        padding: 13,
-        backgroundColor: "#ad0a98",
-        borderRadius: 4
+        padding: 12,
+        backgroundColor: "#ad0a0a",
+        borderRadius: 16
     },
     buttonText: {
         color: "white",
