@@ -9,8 +9,20 @@ import { View } from 'react-native';
 import IssueDetailScreen from './src/screens/IssueDetailScreen';
 import ErrorScreen from './src/screens/ErrorScreen';
 import FlashMessage from 'react-native-flash-message';
+import { Issue } from './src/components/IssueCard';
 
-const Stack = createNativeStackNavigator();
+export type StackParams = {
+  Issues: {},
+  CreateIssue: {},
+  IssueDetails: {
+    issue: Issue
+  },
+  Error: {
+    errorMessage: string
+  },
+}
+
+const Stack = createNativeStackNavigator<StackParams>();
 
 export default function App() {
   const queryClient = new QueryClient();
@@ -21,8 +33,8 @@ export default function App() {
         <NavigationContainer>
           <Stack.Navigator>
             <Stack.Screen name="Issues" component={IssueListWrapper} />
-            <Stack.Screen name="Create Issue" component={IssueCreationScreen} />
-            <Stack.Screen name="Issue Details" component={IssueDetailScreen} />
+            <Stack.Screen name="CreateIssue" component={IssueCreationScreen} />
+            <Stack.Screen name="IssueDetails" component={IssueDetailScreen} />
             <Stack.Screen name="Error" component={ErrorScreen} />
           </Stack.Navigator>
           <FlashMessage position="top" style={{ paddingTop: 32 }} />

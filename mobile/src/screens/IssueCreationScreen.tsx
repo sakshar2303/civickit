@@ -8,11 +8,13 @@ import { Button, View, StyleSheet, ScrollView, TextInput, Text, FlatList, Keyboa
 import SelectedImage from '../components/SelectedImage';
 import ModalDropdown from '../components/ModalDropdown';
 import ENV from '../config/env';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack'
 import { IssueCategory } from '../types/IssueCategory';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { showMessage } from "react-native-flash-message";
 import AntDesign from '@expo/vector-icons/AntDesign';
+import { StackParams } from '../../App';
 
 export default function IssueCreationScreen() {
     const [images, setImages] = useState<string[]>([]);
@@ -23,7 +25,7 @@ export default function IssueCreationScreen() {
     const [description, setDescription] = useState<string>("");
     const [submitAllowed, setSubmitAllowed] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState(false)
-    const navigation = useNavigation();
+    const navigation = useNavigation<StackNavigationProp<StackParams>>()
     //TODO: implement tags
 
     //DO NOT LEAVE THIS HERE, TESTING PURPOSES ONLY
@@ -62,6 +64,7 @@ export default function IssueCreationScreen() {
                 selectionLimit: 5 - images.length
             })
             if (!results.canceled) {
+                //does not work on web, retruns unusable uri
                 const resultList = results.assets.map(r => r.uri)
                 setImages([...images, ...resultList]);
             }
@@ -75,6 +78,7 @@ export default function IssueCreationScreen() {
                 mediaTypes: ['images'],
                 quality: 0.8,
             });
+            //does not work on web, retruns unusable uri
             if (!result.canceled) {
                 setImages([...images, result.assets[0].uri]);
             }
@@ -90,7 +94,6 @@ export default function IssueCreationScreen() {
     const categories = [
         "Pothole", "Streetlight", "Trash", "Graffiti", "Broken Sidewalk", "Traffic Signal", "Other"
     ]
-
     const handleSetCategory = (issueCategory: any) => {
         if (issueCategory.replace(/ /g, "_").toUpperCase() in IssueCategory) {
             setCategory(issueCategory.replace(/ /g, "_").toUpperCase())
@@ -101,18 +104,16 @@ export default function IssueCreationScreen() {
 
     }
 
-
-
     const handleSubmit = async () => {
         try {
             const formData = new FormData();
             formData.append('title', title);
             formData.append('description', description);
-            formData.append('category', category);
+            formData.append('category', category!);
             formData.append('latitude', location!.latitude.toString());
             formData.append('longitude', location!.longitude.toString());
             images.forEach(uri => {
-                formData.append('images', { uri: uri, type: 'image/jpeg', name: 'photo.jpg' });
+                formData.append('images', { uri: uri, type: 'image/jpeg', name: 'photo.jpg' } as unknown as File);
             });
 
             const request = new Request(ENV.apiUrl + '/issues/', {
@@ -137,9 +138,9 @@ export default function IssueCreationScreen() {
                 type: "success",
             });
             const issue = await response.json()
-            navigation.replace('Issue Details', { issue: issue })
+            navigation.replace('IssueDetails', { issue: issue })
 
-        } catch (error) {
+        } catch (error: any) {
             if (error.message.includes("latitude") || error.message.includes("longtitude")) {
                 navigation.navigate('Error', { errorMessage: 'Location permission denied' })
                 throw new Error("Location permission denied")
@@ -164,7 +165,6 @@ export default function IssueCreationScreen() {
         address != "Detecting location..."
     ) {
         setSubmitAllowed(true)
-
     } else if (submitAllowed && (
         title.length < 3 ||
         description.length == 0 ||
@@ -174,6 +174,7 @@ export default function IssueCreationScreen() {
         setSubmitAllowed(false)
     }
 
+    //display loading after submit
     if (isLoading) {
         <MessageView>
             Loading...

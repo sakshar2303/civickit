@@ -1,9 +1,13 @@
 // mobile/src/screens/IssueDetailScreen.tsx
+import { StaticScreenProps } from '@react-navigation/native';
 import { View, Text, StyleSheet } from 'react-native';
-import FlashMessage, { showMessage, hideMessage } from "react-native-flash-message";
+import { Issue } from '../components/IssueCard';
 
-//pass issue selected state in so it can be disabled
-export default function IssueDetailScreen({ route }: any) {
+type Props = StaticScreenProps<{
+  issue: Issue;
+}>;
+
+export default function IssueDetailScreen({ route }: Props) {
   const issue = route.params.issue
 
   return (
