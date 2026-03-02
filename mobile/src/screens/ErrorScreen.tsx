@@ -1,6 +1,11 @@
+import { StaticScreenProps } from "@react-navigation/native";
 import { MessageView } from "../components/MessageView";
 
-export default function ErrorScreen({ route }: any) {
+type Props = StaticScreenProps<{
+    errorMessage: string;
+}>;
+
+export default function ErrorScreen({ route }: Props) {
     const errorMessage = route.params.errorMessage;
 
     return (

@@ -12,13 +12,15 @@ import { LocationContext } from '../types/LocationContext';
 import { Button } from '@react-navigation/elements';
 import ENV from '../config/env';
 import { useNavigation } from '@react-navigation/native';
+import { StackParams } from '../../App';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 
 export default function IssueListScreen() {
   const [refreshing, setRefreshing] = useState(false)
   const [selectedIssue, setSelectedIssue] = useState()
   const [isIssueSelected, setIsIssueSelected] = useState(false)
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigationProp<StackParams>>();
 
   //get contexts from above layer(s)
   const queryClient = useQueryClient()
@@ -43,7 +45,7 @@ export default function IssueListScreen() {
 
   //onIssuePress behaviour
   const onIssuePress = (issue: any) => {
-    navigation.navigate('Issue Details', { issue: issue })
+    navigation.navigate('IssueDetails', { issue: issue })
   }
 
   //check if still loading
@@ -79,7 +81,7 @@ export default function IssueListScreen() {
   if (data.issues.length == 0) {
     return (
       <View>
-        <Button style={styles.button} onPress={() => navigation.navigate("Create Issue")}>
+        <Button style={styles.button} onPress={() => navigation.navigate("CreateIssue", {})}>
           Report New Issue
         </Button>
         <MessageView enableRefresh={true}
@@ -92,19 +94,10 @@ export default function IssueListScreen() {
     )
   }
 
-  //check if issue selected
-  if (isIssueSelected) {
-    return (
-      <IssueDetailScreen issue={selectedIssue}
-        isIssueSelected={isIssueSelected}
-        setIsIssueSelected={setIsIssueSelected}></IssueDetailScreen>
-    )
-  }
-
   //display list
   return (
     <View style={styles.container}>
-      <Button style={styles.button} onPress={() => navigation.navigate("Create Issue")}>
+      <Button style={styles.button} onPress={() => navigation.navigate("CreateIssue", {})}>
         Report New Issue
       </Button>
 
@@ -113,7 +106,7 @@ export default function IssueListScreen() {
         style={styles.list}
         data={data.issues}
         renderItem={({ item }) => <IssueCard issue={item}
-          onPress={() => onIssuePress(item)}
+          onPress={() => navigation.navigate("IssueDetails", { issue: item })}
           variant='expanded' />}
         keyExtractor={(item) => item.id}
         refreshControl={<RefreshControl refreshing={refreshing}
