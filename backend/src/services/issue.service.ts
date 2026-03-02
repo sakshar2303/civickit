@@ -2,13 +2,24 @@
 
 import { IssueRepository } from '../repositories/issue.repository';
 import { CreateIssueDTO } from '../types/issue.types';
+import { uploadImage } from '../utils/cloudinary';
 
 export class IssueService {
-  constructor(private issueRepository: IssueRepository) {}
+  constructor(private issueRepository: IssueRepository) { }
 
-  async createIssue(data: CreateIssueDTO, userId: string) {
-    // TODO: Upload images to Cloudinary here
-    // For now, just pass through
+  async createIssue(data: CreateIssueDTO, userId: string, files?: Express.Multer.File[]) {
+    let uploadedImages: string[] = [];
+    
+    // Upload images to Cloudinary if provided
+    if (files && files.length > 0) {
+      try {
+        uploadedImages = await Promise.all(files.map(file => uploadImage(file.buffer)));
+      } catch (error) {
+        console.error('Cloudinary upload failed:', error);
+        throw new Error('Image upload failed');
+      }
+    }
+    
     if (!data.title || data.title.length <3){
       throw {status:  400, message: 'Title must be at least 3 characters'};
     }
@@ -18,9 +29,11 @@ export class IssueService {
     if (data.latitude === undefined || data.longitude === undefined) {
       throw {status: 400, message: 'Latitude and longitude are required'};
     }
-
-    return this.issueRepository.create({ ...data, userId });
+    
+    // Save issue with image metadata
+    return this.issueRepository.create({ ...data, userId, images: uploadedImages });
   }
+
 
   async getNearbyIssues(lat: number, lng: number, radius?: number) {
     return this.issueRepository.findNearby(lat, lng, radius);
