@@ -2,7 +2,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { IssueService } from '../services/issue.service';
 import { IssueRepository } from '../repositories/issue.repository';
-import multer from 'multer';
 
 const issueRepository = new IssueRepository();
 const issueService = new IssueService(issueRepository);
