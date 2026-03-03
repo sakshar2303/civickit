@@ -1,20 +1,18 @@
 // mobile/src/screens/IssueDetailScreen.tsx
+import { StaticScreenProps } from '@react-navigation/native';
 import { View, Text, StyleSheet } from 'react-native';
-import { Button } from 'react-native';
+import { Issue } from '../components/IssueCard';
 
-//pass issue selected state in so it can be disabled
-export default function IssueDetailScreen({ issue,
-  isIssueSelected, setIsIssueSelected }: any) {
-  const onBackPress = () => {
-    setIsIssueSelected(false)
-  }
+type Props = StaticScreenProps<{
+  issue: Issue;
+}>;
 
+export default function IssueDetailScreen({ route }: Props) {
+  const issue = route.params.issue
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{issue.title}</Text>
-      <Button onPress={onBackPress}
-        title="Back"></Button>
     </View>
   );
 }

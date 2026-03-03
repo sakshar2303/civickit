@@ -14,7 +14,7 @@ export class IssueController {
       const latitude = parseFloat(req.body.latitude);
       const longitude = parseFloat(req.body.longitude);
 
-      if (isNaN(latitude) || isNaN(longitude)){
+      if (isNaN(latitude) || isNaN(longitude)) {
         return res.status(400).json({ error: 'Invalid coordinates' });
       }
       //const files = req.body.images as Express.Multer.File[] || [];

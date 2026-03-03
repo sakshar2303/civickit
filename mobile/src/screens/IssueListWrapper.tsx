@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import * as Location from 'expo-location'
 import { Alert } from 'react-native';
 import { QueryClientProvider, useQueryClient } from '@tanstack/react-query';
-import { MessageScreen } from '../components/MessageScreen';
+import { MessageView } from '../components/MessageView';
 import { userLocation } from '../types/userLocation';
 import { LocationContext } from '../types/LocationContext';
 
@@ -14,7 +14,6 @@ const Stack = createNativeStackNavigator();
 export default function IssueListWrapper() {
     const [location, setLocation] = useState<userLocation>()
     const [locationServicesEnabled, setLocationServicesEnabled] = useState(false)
-    // const queryClient = useContext(UseQueryClientContext) as unknown as QueryClient
     const queryClient = useQueryClient();
 
     //get user location
@@ -64,7 +63,9 @@ export default function IssueListWrapper() {
         }
     }
 
-    if (locationServicesEnabled) {
+    if (locationServicesEnabled
+        && location?.latitude != undefined
+        && location?.longitude != undefined) {
         if (queryClient != null) {
             return (
                 <IssueListContextWrapper queryClient={queryClient} location={location}>
@@ -73,18 +74,18 @@ export default function IssueListWrapper() {
             );
         } else {
             return (
-                <MessageScreen enableRefresh={true}
+                <MessageView enableRefresh={true}
                     onRefresh={onRefresh}>
                     Error: query client not found
-                </MessageScreen>
+                </MessageView>
             )
         }
     } else {
         return (
-            <MessageScreen enableRefresh={true}
+            <MessageView enableRefresh={true}
                 onRefresh={onRefresh}>
                 Location permission denied
-            </MessageScreen>
+            </MessageView>
         )
     }
 

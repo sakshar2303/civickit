@@ -1,21 +1,24 @@
 // mobile/src/screens/IssueListScreen.tsx
-import { View, Text, StyleSheet, RefreshControl, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, RefreshControl } from 'react-native';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState, useContext } from 'react';
 import { FlatList } from 'react-native';
 import React from 'react';
-import IssueDetailScreen from './IssueDetailScreen';
 import IssueCard from '../components/IssueCard';
-import { MessageScreen } from '../components/MessageScreen';
+import { MessageView } from '../components/MessageView';
 import { userLocation } from '../types/userLocation';
 import { LocationContext } from '../types/LocationContext';
+import { Button } from '@react-navigation/elements';
 import ENV from '../config/env';
+import { useNavigation } from '@react-navigation/native';
+import { StackParams } from '../types/StackParams';
+import { StackNavigationProp } from '@react-navigation/stack';
+
 
 export default function IssueListScreen() {
   const [refreshing, setRefreshing] = useState(false)
   const [selectedIssue, setSelectedIssue] = useState()
-  const [isIssueSelected, setIsIssueSelected] = useState(false)
-
+  const navigation = useNavigation<StackNavigationProp<StackParams>>();
 
   //get contexts from above layer(s)
   const queryClient = useQueryClient()
@@ -40,58 +43,68 @@ export default function IssueListScreen() {
 
   //onIssuePress behaviour
   const onIssuePress = (issue: any) => {
-    setSelectedIssue(issue)
-    setIsIssueSelected(true)
+    navigation.navigate('IssueDetails', { issue: issue })
   }
 
-  //TODO: reformat
   //check if still loading
   if (isLoading) {
     return (
-      <MessageScreen>Loading...</MessageScreen>
+      <MessageView>Loading...</MessageView>
+    )
+  }
+
+  if (location.latitude == undefined ||
+    location.longitude == undefined) {
+    return (
+      <MessageView enableRefresh={true}
+        onRefresh={refetch}
+        refreshing={refreshing}>
+        Error: Please Reload
+      </MessageView>
     )
   }
 
   //check if error has been thrown
   if (error != undefined) {
     return (
-      <MessageScreen enableRefresh={true}
+      <MessageView enableRefresh={true}
         onRefresh={refetch}
         refreshing={refreshing}>
         {String(error)}
-      </MessageScreen>
+      </MessageView>
     )
   }
 
   //check if any data was returned
   if (data.issues.length == 0) {
     return (
-      <MessageScreen enableRefresh={true}
-        onRefresh={refetch}
-        refreshing={refreshing}>
-        No issues nearby
-      </MessageScreen>
-    )
-  }
+      <View>
+        <Button style={styles.button} onPress={() => navigation.navigate("CreateIssue", {})}>
+          Report New Issue
+        </Button>
+        <MessageView enableRefresh={true}
+          onRefresh={refetch}
+          refreshing={refreshing}>
+          No issues nearby
+        </MessageView>
+      </View>
 
-  //check if issue selected
-  if (isIssueSelected) {
-    return (
-      <IssueDetailScreen issue={selectedIssue}
-        isIssueSelected={isIssueSelected}
-        setIsIssueSelected={setIsIssueSelected}></IssueDetailScreen>
     )
   }
 
   //display list
   return (
     <View style={styles.container}>
+      <Button style={styles.button} onPress={() => navigation.navigate("CreateIssue", {})}>
+        Report New Issue
+      </Button>
+
       <Text style={styles.title}>Nearby Issues</Text>
       <FlatList
         style={styles.list}
         data={data.issues}
         renderItem={({ item }) => <IssueCard issue={item}
-          onPress={() => onIssuePress(item)}
+          onPress={() => navigation.navigate("IssueDetails", { issue: item })}
           variant='expanded' />}
         keyExtractor={(item) => item.id}
         refreshControl={<RefreshControl refreshing={refreshing}
@@ -126,6 +139,9 @@ const styles = StyleSheet.create({
   list: {
     width: '80%',
     alignSelf: 'center'
+  },
+  button: {
+    margin: 12,
+    alignSelf: 'flex-end'
   }
 });
-
