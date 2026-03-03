@@ -135,9 +135,11 @@ export default function IssueCreationScreen() {
 
     //display loading if needed after submit
     if (isLoading) {
-        <MessageView>
-            Loading...
-        </MessageView>
+        return (
+            <MessageView>
+                Loading...
+            </MessageView>
+        )
     }
 
     const handleSubmit = async () => {
@@ -200,7 +202,7 @@ export default function IssueCreationScreen() {
         imageContainer: {
             padding: 12,
             gap: 12,
-            height: 200,
+            height: 224,
             backgroundColor: "#e7e7e7",
             borderRadius: 16,
             marginVertical: 4
