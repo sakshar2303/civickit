@@ -6,7 +6,6 @@ import { authMiddleware } from '../middleware/auth.middleware';
 const router = Router();
 const loginController = new LoginController();
 
-console.log("in login routes")
 // Rate Limiter
 import RateLimit from 'express-rate-limit';
 const limiter = RateLimit({
