@@ -13,7 +13,8 @@ export {
     CreateIssueDTO,
     LoginDTO,
     LoginResponse,
-    CreateAuthDTO
+    CreateAuthDTO,
+    GetNearbyIssueResponse
 } from './types/api'
 
 export {

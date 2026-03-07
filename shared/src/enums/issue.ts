@@ -4,7 +4,9 @@ export type IssueCategory =
     | 'POTHOLE'
     | 'STREETLIGHT'
     | 'GRAFFITI'
-    | 'TRASH'
+    | 'ILLEGAL_DUMPING'
+    | 'BROKEN_SIDEWALK'
+    | 'TRAFFIC_SIGNAL'
     | 'OTHER';
 
 export type IssueStatus =

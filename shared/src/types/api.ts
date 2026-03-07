@@ -1,5 +1,5 @@
 // shared/src/types/api.ts
-import { IssueCategory } from "../enums/issue";
+import { IssueCategory, IssueStatus } from "../enums/issue";
 
 export interface ApiResponse<T> {
     success: boolean;
@@ -15,6 +15,21 @@ export interface CreateIssueDTO {
     longitude: number;
     address: string;
     images?: string[];
+}
+
+export interface GetNearbyIssueResponse {
+    title: string;
+    description: string;
+    category: IssueCategory;
+    latitude: number;
+    longitude: number;
+    address: string;
+    images: string[];
+    id: string;
+    createdAt: string;
+    status: IssueStatus;
+    distance: string
+    upvoteCount: number
 }
 
 export interface LoginDTO {
