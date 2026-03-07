@@ -15,8 +15,6 @@ export const palette = {
     ckMediumGray: "#9CA3AF",
     ckLightGray: "#E5E7EB",
 
-    successGreen: "#10B981",
-
 }
 
 //element colors
