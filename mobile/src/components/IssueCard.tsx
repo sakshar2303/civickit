@@ -17,7 +17,7 @@ import {
   GestureResponderEvent,
 } from 'react-native';
 import { globalStyles } from '../styles';
-import { borderRadius, colors, palette, size, spacing, typography } from '../styles/theme';
+import { borderRadius, colors, size, spacing, typography } from '../styles';
 import Entypo from '@expo/vector-icons/Entypo';
 
 export interface Issue {

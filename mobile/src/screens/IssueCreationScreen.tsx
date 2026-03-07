@@ -16,9 +16,8 @@ import { showMessage } from "react-native-flash-message";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Entypo from '@expo/vector-icons/Entypo';
 import { StackParams } from '../types/StackParams';
-import { borderRadius, colors, globalStyles, spacing } from '../styles';
+import { borderRadius, colors, globalStyles, spacing, palette, size, typography } from '../styles';
 import Button from '../components/Button';
-import { palette, size, typography } from '../styles/theme';
 import IconButton from '../components/IconButton';
 
 export default function IssueCreationScreen() {

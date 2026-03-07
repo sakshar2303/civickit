@@ -1,7 +1,6 @@
 //mobile/src/components/SelectedImage.tsx
 import { Image, StyleSheet, View } from 'react-native'
-import { borderRadius, colors, palette, size, typography } from '../styles/theme';
-import { globalStyles } from '../styles';
+import { globalStyles, borderRadius, colors, palette, size, typography } from '../styles';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import IconButton from './IconButton';
 

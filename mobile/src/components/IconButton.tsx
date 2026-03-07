@@ -1,7 +1,6 @@
 //mobile/src/components/IconButton.tsx
 import { globalStyles } from '../styles';
 import { TouchableOpacity } from 'react-native';
-import { palette } from '../styles/theme';
 
 export default function NewIssueButton({ onPress, style, isDisabled = false, children }: any) {
     return (

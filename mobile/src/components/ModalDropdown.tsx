@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { View, Modal, Text, FlatList, StyleSheet, TouchableOpacity } from "react-native";
 import Button from "./Button";
-import { globalStyles } from "../styles";
-import { borderRadius, colors, palette, spacing, typography } from "../styles/theme";
+import { borderRadius, colors, palette, spacing, typography } from "../styles";
 
 export default function ModalDropdown({ data, onDataSelect, defaultText }: any) {
     const [isVisible, setIsVisible] = useState(false)

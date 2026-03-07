@@ -9,10 +9,8 @@ import IssueDetailScreen from './src/screens/IssueDetailScreen';
 import ErrorScreen from './src/screens/ErrorScreen';
 import FlashMessage from 'react-native-flash-message';
 import { StackParams } from './src/types/StackParams';
-import { Button } from '@react-navigation/elements';
 import NewIssueButton from './src/components/NewIssueButton';
-import { colors, palette, typography } from './src/styles/theme';
-import { useState } from 'react';
+import { colors, typography } from './src/styles';
 
 const Stack = createNativeStackNavigator<StackParams>();
 
