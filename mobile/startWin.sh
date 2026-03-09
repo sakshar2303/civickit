@@ -4,7 +4,7 @@
 
 if [ $1 == "ip" ]; then
     IP_LINE=$(ipconfig | findstr IPv4 )
-    IP=${IP_LINE:39:40}
+    IP=${IP_LINE:39}
 
     # echo ${IP_LINE:39:(${#IP_LINE}-39)}
 
