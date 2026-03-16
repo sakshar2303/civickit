@@ -1,13 +1,13 @@
 //mobile/src/types/StackParams.ts
-import { Issue } from "../components/IssueCard"
+import { Issue } from "@civickit/shared"
 
 export type StackParams = {
-    Issues: {},
-    CreateIssue: {},
-    IssueDetails: {
+    "Nearby Issues": {},
+    "Create Issue": {},
+    "Issue Details": {
         issue: Issue
     },
-    Error: {
+    "Error": {
         errorMessage: string
     },
 }
