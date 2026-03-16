@@ -34,7 +34,7 @@ export default function IssueCreationScreen() {
     //TODO: implement tags
 
     //DO NOT LEAVE THIS HERE, TESTING PURPOSES ONLY
-    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJteS11c2VyIiwiaWF0IjoxNzcyODA5MzY4LCJleHAiOjE3NzM0MTQxNjh9.YlH0cHOZIfIRrq39g2U4M1OH1k6VaSRoDDxwOXaXQJM"
+    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWw1ZW03N3YwMDAwbDQwYmFnbWk2em01IiwiaWF0IjoxNzczNjc3Mzk3LCJleHAiOjE3NzQyODIxOTd9.fBdeKuLGPLGm4xExV3ucAVdHn-fuqtskPIlUtlHWLaI"
 
     //get location
     useEffect(() => {
