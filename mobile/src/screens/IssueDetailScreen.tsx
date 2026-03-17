@@ -78,6 +78,20 @@ const IssueDetailScreen = () => {
               Tags
             </Text>
           </View>
+        
+        <View style={styles.divider} />
+
+        {/* Category */}
+          <View style={styles.infoRow}>
+            <TagIcon
+              color={colors.textPrimary}
+              size={typography.sizeLg}
+              style={styles.icon}
+            />
+            <Text style={styles.infoRowText}>
+              Category
+            </Text>
+          </View> 
 
         </View>
 
