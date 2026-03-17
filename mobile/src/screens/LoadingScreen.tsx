@@ -5,18 +5,13 @@ import { View, Text, StyleSheet } from "react-native";
 import { colors, globalStyles, size, spacing, typography } from "../styles";
 import { Logo, LogoPlusText } from "../components/Logos";
 
-type Props = StaticScreenProps<{
-    errorMessage: string;
-}>;
-
-export default function ErrorScreen({ route }: Props) {
-    const errorMessage = route.params.errorMessage;
+export default function ErrorScreen() {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.text}>{errorMessage}</Text>
-            <ErrorIcon color={colors.textPrimary}
-                size={size.xxl} />
+            <Text style={styles.text}>"Aut viam inveniam aut faciam"</Text>
+            <Text style={styles.text}>"I will either find a way or make one"</Text>
+            <LogoPlusText />
         </View>
     )
 }
@@ -29,8 +24,8 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     text: {
-        ...globalStyles.heading1,
-        fontSize: typography.sizeXxl,
+        fontSize: typography.sizeMd,
+        color: colors.textSecondary,
         marginBottom: spacing.md
     },
 });
