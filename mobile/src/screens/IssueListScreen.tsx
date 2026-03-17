@@ -13,6 +13,7 @@ import { useNavigation } from '@react-navigation/native';
 import { StackParams } from '../types/StackParams';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { globalStyles, spacing } from '../styles';
+import LoadingScreen from './LoadingScreen';
 
 export default function IssueListScreen() {
   const [refreshing, setRefreshing] = useState(false)
@@ -43,7 +44,7 @@ export default function IssueListScreen() {
   //check if still loading
   if (isLoading) {
     return (
-      <MessageView>Loading...</MessageView>
+      <LoadingScreen />
     )
   }
 

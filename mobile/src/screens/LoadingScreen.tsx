@@ -1,17 +1,38 @@
-import { StaticScreenProps } from "@react-navigation/native";
-import { MessageView } from "../components/MessageView";
-import { ErrorIcon } from "../components/Icons";
-import { View, Text, StyleSheet } from "react-native";
-import { colors, globalStyles, size, spacing, typography } from "../styles";
-import { Logo, LogoPlusText } from "../components/Logos";
+import { StaticScreenProps, useNavigation } from "@react-navigation/native";
+import { View, StyleSheet } from "react-native";
+import { colors, globalStyles, spacing, typography } from "../styles";
+import { LoopingLogoGif } from "../components/Logos";
+import React from "react";
+import Svg, { G, Circle, Text, TextPath, TSpan } from 'react-native-svg';
 
-export default function ErrorScreen() {
-
+export default function LoadingScreen() {
+    // <Text style={styles.text}>"Aut viam inveniam aut faciam"</Text>
+    // <Text style={styles.text}>"I will either find a way or make one"</Text>
     return (
         <View style={styles.container}>
-            <Text style={styles.text}>"Aut viam inveniam aut faciam"</Text>
-            <Text style={styles.text}>"I will either find a way or make one"</Text>
-            <LogoPlusText />
+            <LoadingScreen />
+            <Svg height="100%" width="100%" viewBox="0 0 100 100">
+                <G id="circle">
+                    <Circle
+                        r={100}
+                        x={150}
+                        y={150}
+                        fill="none"
+                        stroke="none"
+                        strokeWidth={0}
+                        transform="rotate(-150)"
+                    />
+                </G>
+                <Text fill="#000" fontSize="14">
+                    <Text fill={colors.primary} fontSize={typography.sizeLg}>
+                        <TextPath href="#circle">
+                            <TSpan dy={0}>
+                                "Aut viam inveniam aut faciam"
+                            </TSpan>
+                        </TextPath>
+                    </Text>
+                </Text>
+            </Svg>
         </View>
     )
 }
@@ -20,12 +41,13 @@ export default function ErrorScreen() {
 const styles = StyleSheet.create({
     container: {
         ...globalStyles.container,
-        justifyContent: 'center',
-        alignItems: 'center'
+        justifyContent: `flex-start`,
+        alignItems: 'center',
+        paddingBlockStart: spacing.xxxl * 2
     },
     text: {
-        fontSize: typography.sizeMd,
+        ...globalStyles.heading1,
         color: colors.textSecondary,
-        marginBottom: spacing.md
+        marginVertical: spacing.sm
     },
 });
