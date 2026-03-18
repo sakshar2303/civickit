@@ -11,6 +11,7 @@ import FlashMessage from 'react-native-flash-message';
 import { StackParams } from './src/types/StackParams';
 import NewIssueButton from './src/components/NewIssueButton';
 import { colors, typography } from './src/styles';
+import LoadingScreen from './src/screens/LoadingScreen';
 
 const Stack = createNativeStackNavigator<StackParams>();
 
