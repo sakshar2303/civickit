@@ -1,10 +1,10 @@
 // mobile/src/screens/IssueDetailScreen.tsx
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Platform, Text, ScrollView, FlatList, Image, StyleSheet, View, TouchableOpacity } from 'react-native';
 import { useRoute, RouteProp } from '@react-navigation/native';
 import { Issue } from '@civickit/shared';
 import { format, formatDistanceToNow } from 'date-fns';
-import { ClockIcon, LocationPinIcon, TagIcon, WrenchIcon } from '../components/Icons';
+import { CategoryIcon, ClockIcon, LocationPinIcon, TagIcon, WrenchIcon } from '../components/Icons';
 import { borderRadius, colors, palette, size, spacing, typography } from '../styles';
 
 let MapView: any = null;
@@ -24,6 +24,8 @@ type IssueDetailRouteProp = RouteProp<
 const IssueDetailScreen = () => {
   const route = useRoute<IssueDetailRouteProp>();
   const { issue } = route.params;
+
+  const [category, setCategory] = useState<String>(issue.category.replace(/_/g, " ").toLowerCase())
 
   return (
     <View style={styles.page}>
@@ -81,13 +83,13 @@ const IssueDetailScreen = () => {
 
           {/* Category */}
           <View style={styles.infoRow}>
-            <TagIcon
+            <CategoryIcon
               color={colors.textPrimary}
               size={typography.sizeLg}
               style={styles.icon}
             />
             <Text style={styles.infoRowText}>
-              Category
+              {category}
             </Text>
           </View>
 
@@ -201,6 +203,7 @@ const styles = StyleSheet.create({
   infoRowText: {
     fontSize: typography.sizeLg,
     color: colors.textSecondary,
+    textTransform: 'capitalize'
   },
 
   infoRow: {

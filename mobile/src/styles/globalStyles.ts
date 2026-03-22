@@ -94,7 +94,7 @@ export const globalStyles = StyleSheet.create({
         shadowOpacity: 0.05,
         shadowRadius: 16,
         shadowOffset: { width: 0, height: 2 },
-    }
+    },
 
 });
 

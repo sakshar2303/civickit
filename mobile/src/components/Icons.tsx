@@ -8,6 +8,8 @@ import { StyleProp, TextStyle } from "react-native";
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import React from "react";
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import EvilIcons from '@expo/vector-icons/EvilIcons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 interface IconProps {
     color?: string,
@@ -172,3 +174,56 @@ export function AddIcon(props: IconProps) {
     )
 }
 
+export function ExclamationPointIcon(props: IconProps) {
+    return (
+        <FontAwesome name="exclamation"
+            color={props.color}
+            size={props.size}
+            style={props.style} />
+    )
+}
+
+export function RefreshIcon(props: IconProps) {
+    return (
+        <EvilIcons name="refresh"
+            color={props.color}
+            size={props.size}
+            style={props.style} />
+    )
+}
+
+export function FilterIcon(props: IconProps) {
+    return (
+        <Ionicons name="filter-outline"
+            color={props.color}
+            size={props.size}
+            style={props.style} />
+    )
+}
+
+export function StatusIcon(props: IconProps) {
+    return (
+        <MaterialCommunityIcons name="progress-check"
+            color={props.color}
+            size={props.size}
+            style={props.style} />
+    )
+}
+
+export function WarningIcon(props: IconProps) {
+    return (
+        <FontAwesome name="warning"
+            color={props.color}
+            size={props.size}
+            style={props.style} />
+    )
+}
+
+export function UpArrowIcon(props: IconProps) {
+    return (
+        <Entypo name="arrow-bold-up"
+            color={props.color}
+            size={props.size}
+            style={props.style} />
+    )
+}
