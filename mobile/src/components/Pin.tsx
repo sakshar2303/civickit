@@ -1,0 +1,129 @@
+// mobile/src/components/MapMarker.tsx
+import { Callout, Marker } from "react-native-maps";
+import { Logo } from "./Logos";
+import { View, Text, StyleSheet } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { StackParams } from "../types/StackParams";
+import { Image } from 'expo-image';
+import { BrokenIcon, ExclamationPointIcon, LightBulbIcon, LocationPinIcon, SprayPaintIcon, TrafficConeIcon, TrafficLightIcon, TrashIcon } from "./Icons";
+import { colors, size, spacing, typography } from "../styles";
+import { useState, useEffect } from "react";
+
+export default function Pin({ issue }: any) {
+    const navigation = useNavigation<StackNavigationProp<StackParams>>();
+    const [icon, setIcon] = useState(
+        <View style={{ ...styles.icon, paddingTop: spacing.xs + 2 }}>
+            <ExclamationPointIcon size={typography.sizeLg} color={colors.textPrimary} />
+        </View>
+    )
+    const [pinImage, setPinImage] = useState(
+        <View style={{ ...styles.pin }}>
+            <Image source={require('../../assets/pins/' + 'REPORTED' + '.svg')}
+                style={{ width: 50, height: 50 }}
+            />
+        </View >
+    )
+
+    //get correct icon and pin
+    useEffect(() => {
+        if (issue.category == "POTHOLE") {
+            setIcon(
+                <View style={styles.icon}>
+                    <TrafficConeIcon size={size.md} color={colors.textPrimary} />
+                </View>
+            )
+        } else if (issue.category == "STREETLIGHT") {
+            setIcon(
+                <View style={{ ...styles.icon, paddingTop: spacing.xs + 2 }}>
+                    <LightBulbIcon size={size.md} color={colors.textPrimary} />
+                </View>
+            )
+        } else if (issue.category == "GRAFFITI") {
+            setIcon(
+                <View style={styles.icon}>
+                    <SprayPaintIcon size={size.md} color={colors.textPrimary} />
+                </View>
+            )
+        } else if (issue.category == "ILLEGAL_DUMPING") {
+            setIcon(
+                <View style={{ ...styles.icon, paddingTop: spacing.xs + 1 }}>
+                    <TrashIcon size={size.md} color={colors.textPrimary} />
+                </View>
+            )
+        } else if (issue.category == "BROKEN_SIDEWALK") {
+            setIcon(
+                <View style={{ ...styles.icon, paddingTop: spacing.xs + 1 }}>
+                    <BrokenIcon size={size.md} color={colors.textPrimary} />
+                </View>
+            )
+        } else if (issue.category == "TRAFFIC_SIGNAL") {
+            setIcon(
+                <View style={{ ...styles.icon, paddingTop: spacing.xs + 2 }}>
+                    <TrafficLightIcon size={size.md} color={colors.textPrimary} />
+                </View>
+            )
+        }
+
+        if (issue.status == "ACKNOWLEDGED") {
+
+            setPinImage(
+                <View style={styles.pin}>
+                    <Image source={require('../../assets/pins/' + 'ACKNOWLEDGED' + '.svg')}
+                        style={{ width: 35, height: 35 }} />
+                </View >
+            )
+        } else if (issue.status == "IN_PROGRESS") {
+            setPinImage(
+                <View style={styles.pin}>
+                    <Image source={require('../../assets/pins/' + 'IN_PROGRESS' + '.svg')}
+                        style={{ width: 35, height: 35 }} />
+                </View >
+            )
+        } else if (issue.status == "RESOLVED") {
+            setPinImage(
+                <View style={styles.pin}>
+                    <Image source={require('../../assets/pins/' + 'RESOLVED' + '.svg')}
+                        style={{ width: 35, height: 35 }} />
+                </View >
+            )
+        } else if (issue.status == "COMMUNITY_RESOLVED") {
+            setPinImage(
+                <View style={styles.pin}>
+                    <Image source={require('../../assets/pins/' + 'COMMUNITY_RESOLVED' + '.svg')}
+                        style={{ width: 35, height: 35 }} />
+                </View >
+            )
+        } else if (issue.status == "CLOSED") {
+            setPinImage(
+                <View style={styles.pin}>
+                    <Image source={require('../../assets/pins/' + 'CLOSED' + '.svg')}
+                        style={{ width: 35, height: 35 }} />
+                </View >
+            )
+        }
+    }, [])
+
+    return (
+        <View style={{ ...styles.container }}>
+            {pinImage}
+            {icon}
+        </View>
+
+    )
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        alignContent: "center",
+        alignItems: "center",
+    },
+    pin: {
+
+    },
+    icon: {
+        position: "absolute",
+        paddingTop: spacing.xs
+    }
+})

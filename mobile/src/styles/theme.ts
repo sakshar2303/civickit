@@ -2,7 +2,9 @@
 
 //brand colors
 export const palette = {
-    ckBlue: "#2563EB",
+    ckBrightBlue: "#2563EB",
+    ckBlue: "#3A78AC",
+    ckDarkBlue: "#30638E",
     ckRed: "#D1495B",
     ckYellow: "#EDAE49",
     ckLightGreen: "#9DCBBA",
@@ -38,8 +40,12 @@ export const colors = {
 
     border: palette.ckLightGray,
 
-    statusReported: palette.ckYellow,
-    statusResolved: palette.ckLightGreen,
+    statusReported: palette.ckRed,
+    statusAcknowledged: palette.ckDarkBlue,
+    statusInProgress: palette.ckYellow,
+    statusCommunityResolved: palette.ckLightGreen,
+    statusResolved: palette.ckGreen,
+    statusClosed: palette.ckMediumGray,
 };
 
 export const spacing = {
@@ -78,8 +84,9 @@ export const size = {
     xl: 32,
     xxl: 48,
     xxxl: 80,
+    x4l: 84,
     cardCompact: 80,
     cardExpanded: 120,
     longButton: 200,
-    imageLg: 340
+    imageLg: 340,
 };

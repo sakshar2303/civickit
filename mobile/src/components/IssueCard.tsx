@@ -25,9 +25,14 @@ interface IssueCardProps {
   onPress?: () => void;
 }
 
+//TODO: update to include other statuses
 const statusColors: Record<string, string> = {
   reported: colors.statusReported,
   resolved: colors.statusResolved,
+  acknowleged: colors.statusAcknowledged,
+  in_progress: colors.statusInProgress,
+  community_resolved: colors.statusCommunityResolved,
+  closed: colors.statusClosed,
   default: colors.background,
 };
 
@@ -134,7 +139,7 @@ export default function IssueCard({ issue, variant = 'compact', onPress }: any) 
               }}
             >
               <Text style={styles.statusText}>
-                {issue.status}
+                {issue.status.replace(/_/g, " ")}
               </Text>
             </View>
 

@@ -1,17 +1,16 @@
 // mobile/src/screens/IssueListWrapper.tsx
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import IssueListScreen from './IssueListScreen';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import * as Location from 'expo-location'
 import { Alert } from 'react-native';
 import { useQueryClient } from '@tanstack/react-query';
 import { MessageView } from '../components/MessageView';
 import { userLocation } from '../types/userLocation';
 import { LocationContext } from '../types/LocationContext';
+import MapViewScreen from './MapViewScreen';
+import LoadingScreen from './LoadingScreen';
+import HomeScreen from './HomeScreen';
 
-const Stack = createNativeStackNavigator();
-
-export default function IssueListWrapper() {
+export default function HomeScreenWrapper() {
     const [location, setLocation] = useState<userLocation>()
     const [locationServicesEnabled, setLocationServicesEnabled] = useState(false)
     const queryClient = useQueryClient();
@@ -69,7 +68,7 @@ export default function IssueListWrapper() {
         if (queryClient != null) {
             return (
                 <IssueListContextWrapper queryClient={queryClient} location={location}>
-                    <IssueListScreen />
+                    <HomeScreen />
                 </IssueListContextWrapper>
             );
         } else {
@@ -80,12 +79,16 @@ export default function IssueListWrapper() {
                 </MessageView>
             )
         }
-    } else {
+    } else if (!locationServicesEnabled) {
         return (
             <MessageView enableRefresh={true}
                 onRefresh={onRefresh}>
                 Location permission denied
             </MessageView>
+        )
+    } else {
+        return (
+            <LoadingScreen />
         )
     }
 
@@ -99,3 +102,13 @@ function IssueListContextWrapper({ location, children }: any) {
         </LocationContext.Provider>
     )
 }
+
+// <Stack.Screen name="List" component={IssueListScreen}
+//                             options={{
+//                                 presentation: "formSheet",
+//                                 sheetAllowedDetents: [0.4, 0.95],
+//                                 sheetInitialDetentIndex: 0,
+//                                 sheetLargestUndimmedDetentIndex: 0,
+//                                 sheetCornerRadius: borderRadius.lg,
+//                                 sheetElevation: 10
+//                             }} />

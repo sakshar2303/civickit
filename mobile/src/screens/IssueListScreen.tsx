@@ -1,5 +1,5 @@
 // mobile/src/screens/IssueListScreen.tsx
-import { View, RefreshControl } from 'react-native';
+import { View, RefreshControl, Text, StyleSheet } from 'react-native';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState, useContext } from 'react';
 import { FlatList } from 'react-native';
@@ -12,65 +12,19 @@ import ENV from '../config/env';
 import { useNavigation } from '@react-navigation/native';
 import { StackParams } from '../types/StackParams';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { globalStyles, spacing } from '../styles';
+import { globalStyles, spacing, size } from '../styles';
 import LoadingScreen from './LoadingScreen';
+import BottomSheet, { BottomSheetFlatList, BottomSheetView } from '@gorhom/bottom-sheet';
 
-export default function IssueListScreen() {
+export default function IssueListScreen({ issues, refetch }: any) {
   const [refreshing, setRefreshing] = useState(false)
-  const [selectedIssue, setSelectedIssue] = useState()
   const navigation = useNavigation<StackNavigationProp<StackParams>>();
 
   //get contexts from above layer(s)
-  const queryClient = useQueryClient()
-  const location = useContext(LocationContext) as unknown as userLocation
 
-  //fetch issues from database 
-  var { data, isLoading, error, refetch } = useQuery({
-    queryKey: ['issues', 'nearby'],
-    queryFn: async () => {
-      console.log("url: ", ENV.apiUrl)
-      const response = await fetch(
-        ENV.apiUrl + '/issues/nearby?lat=' +
-        location.latitude + '&lng=' + location.longitude + '&radius=5000'
-      );
-      console.log("fetch", response)
-      if (!response.ok) throw new Error('Failed to fetch');
-      return response.json();
-    }
-  }, queryClient);
 
-  console.log(data, isLoading, error)
-
-  //check if still loading
-  if (isLoading) {
-    return (
-      <LoadingScreen />
-    )
-  }
-
-  if (location.latitude == undefined ||
-    location.longitude == undefined) {
-    return (
-      <MessageView enableRefresh={true}
-        onRefresh={refetch}
-        refreshing={refreshing}>
-        Error: Please Reload
-      </MessageView>
-    )
-  }
-
-  //check if error has been thrown
-  if (error != undefined) {
-    return (
-      <MessageView enableRefresh={true}
-        onRefresh={refetch}
-        refreshing={refreshing}>
-        {String(error)}
-      </MessageView>
-    )
-  }
   //check if any data was returned
-  if (data.issues.length == 0) {
+  if (issues.length == 0) {
     return (
       <View>
         <MessageView enableRefresh={true}
@@ -85,20 +39,21 @@ export default function IssueListScreen() {
 
   //display list
   return (
-    <View style={globalStyles.container}>
-      <FlatList
-        style={globalStyles.container}
-        contentContainerStyle={{ gap: spacing.sm }}
-        data={data.issues}
-        renderItem={({ item }) => <IssueCard issue={item}
-          onPress={() => navigation.navigate("Issue Details", { issue: item })}
-          variant='expanded' />}
-        keyExtractor={(item) => item.id}
-        refreshControl={<RefreshControl refreshing={refreshing}
-          onRefresh={refetch} />}
-        extraData={selectedIssue}
-      />
-    </View>
+    <BottomSheetFlatList
+      style={{
+        ...globalStyles.container,
+        marginHorizontal: spacing.md,
+      }}
+      contentContainerStyle={{ gap: spacing.sm }}
+      data={issues}
+      renderItem={({ item }: any) => <IssueCard issue={item}
+        onPress={() => navigation.navigate("Issue Details", { issue: item })}
+        variant='expanded' />}
+      keyExtractor={(item: any) => item.id}
+      refreshControl={<RefreshControl refreshing={refreshing}
+
+        onRefresh={refetch} />}
+    />
   );
 
 }
