@@ -1,11 +1,12 @@
 // mobile/src/screens/IssueDetailScreen.tsx
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Platform, Text, ScrollView, FlatList, Image, StyleSheet, View, TouchableOpacity } from 'react-native';
 import { useRoute, RouteProp } from '@react-navigation/native';
 import { Issue } from '@civickit/shared';
 import { format, formatDistanceToNow } from 'date-fns';
 import { ClockIcon, LocationPinIcon, TagIcon, WrenchIcon } from '../components/Icons';
 import { colors, size, spacing, typography } from '../styles';
+import ENV from '../config/env';
 
 let MapView: any = null;
 let Marker: any = null;
@@ -25,6 +26,43 @@ const IssueDetailScreen = () => {
   const route = useRoute<IssueDetailRouteProp>();
   const { issue } = route.params;
 
+  const [hasEndorsed, setHasEndorsed] = useState(false);
+  const [upvoteCount, setUpvoteCount] = useState(issue.upvoteCount ?? 0);
+  const [loading, setLoading] = useState(false);
+
+  const handleEndorse = async () => {
+    if (loading) return;
+
+    try {
+      setLoading(true);
+
+      //DO NOT LEAVE THIS HERE, TESTING PURPOSES ONLY
+      const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWwxcHB4aTQwMDAwbW5pdGVidmNqb2k2IiwiaWF0IjoxNzc0Mjc3OTI0LCJleHAiOjE3NzQ4ODI3MjR9.HZM4EfD7arRk7f2LMSnzo9Pd0e_xL9vt_tBeQeq8LnI";
+
+      const method = hasEndorsed ? 'DELETE' : 'POST';
+
+      const res = await fetch(
+        `${ENV.apiUrl}/issues/${issue.id}/upvote`,
+        {
+          method,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = await res.json();
+
+      setHasEndorsed(data.upvoted);
+      setUpvoteCount(data.upvoteCount);
+
+    } catch (err) {
+      console.error('Endorse failed:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <View style={styles.page}>
       <ScrollView contentContainerStyle={styles.container}>
@@ -37,7 +75,7 @@ const IssueDetailScreen = () => {
 
           <View style={styles.countBadge}>
             <Text style={styles.countLabel}>count</Text>
-            <Text style={styles.countValue}>{issue.upvoteCount ?? 0}</Text>
+            <Text style={styles.countValue}>{upvoteCount}</Text>
           </View>
         </View>
 
@@ -76,10 +114,10 @@ const IssueDetailScreen = () => {
               Tags
             </Text>
           </View>
-        
-        <View style={styles.divider} />
 
-        {/* Category */}
+          <View style={styles.divider} />
+
+          {/* Category */}
           <View style={styles.infoRow}>
             <TagIcon
               color={colors.textPrimary}
@@ -89,7 +127,7 @@ const IssueDetailScreen = () => {
             <Text style={styles.infoRowText}>
               Category
             </Text>
-          </View> 
+          </View>
 
         </View>
 
@@ -134,9 +172,9 @@ const IssueDetailScreen = () => {
         </Text>
       </ScrollView>
 
-      {/* Bottom Action Button */}
-      <TouchableOpacity style={styles.endorseButton}>
-        <Text style={styles.endorseText}>Endorse</Text>
+      {/* Upvote / Endorse Button */}
+      <TouchableOpacity style={styles.endorseButton} onPress={handleEndorse}>
+        <Text style={styles.endorseText}>{hasEndorsed ? 'Endorsed ✓' : 'Endorse'}</Text>
       </TouchableOpacity>
     </View>
   );
