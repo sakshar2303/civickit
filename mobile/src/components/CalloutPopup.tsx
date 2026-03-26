@@ -5,9 +5,7 @@ import { borderRadius, colors, globalStyles, spacing, typography } from "../styl
 import IssueCard from "./IssueCard";
 import IconButton from "./IconButton";
 import { CloseXIcon, RightArrowIcon } from "./Icons";
-import { useRef } from "react";
 import { GetNearbyIssueResponse, Issue } from "@civickit/shared";
-import PinShape from "../../assets/PinShape";
 
 interface CalloutProps {
     style?: any,

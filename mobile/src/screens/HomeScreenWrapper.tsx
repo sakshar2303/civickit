@@ -6,7 +6,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import { MessageView } from '../components/MessageView';
 import { userLocation } from '../types/userLocation';
 import { LocationContext } from '../types/LocationContext';
-import MapViewScreen from './MapViewScreen';
 import LoadingScreen from './LoadingScreen';
 import HomeScreen from './HomeScreen';
 

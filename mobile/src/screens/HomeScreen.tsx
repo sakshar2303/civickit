@@ -13,7 +13,6 @@ import { IssueCategoryArray } from "../types/IssueCategoryArray";
 import { IssueStatusArray } from "../types/IssueStatusArray";
 import FilterCheckList from "../components/FilterCheckList";
 import IconButton from "../components/IconButton";
-import PinShape from "../../assets/PinShape";
 
 //mobile/src/screens/HomeScreen.tsx
 export default function HomeScreen() {
