@@ -1,8 +1,7 @@
 //mobile/src/screens/IssueCreationScreen.tsx
 import * as ImagePicker from 'expo-image-picker';
 import * as Location from 'expo-location';
-import React, { useContext, useEffect, useState } from 'react';
-import { MessageView } from '../components/MessageView';
+import React, { useEffect, useState } from 'react';
 import { userLocation } from '../types/userLocation';
 import { View, StyleSheet, ScrollView, TextInput, Text, FlatList, TouchableOpacity } from 'react-native';
 import SelectedImage from '../components/SelectedImage';
@@ -18,6 +17,7 @@ import Button from '../components/Button';
 import IconButton from '../components/IconButton';
 import { CameraIcon, PictureIcon } from '../components/Icons';
 import LoadingScreen from './LoadingScreen';
+import { IssueCategoryArray } from '../types/IssueCategoryArray';
 
 export default function IssueCreationScreen() {
     const [images, setImages] = useState<string[]>([]);
@@ -33,8 +33,7 @@ export default function IssueCreationScreen() {
     //TODO: implement tags
 
     //DO NOT LEAVE THIS HERE, TESTING PURPOSES ONLY
-    const token = "eyJhbGciOiJUzI1NiIsInR5cCI6IkpXJ9.eyJ1c2VySWQiOiJteS11c2VyIiwiaWF0IjoxNzczNzA5ODcxLCJleHAiOjE3NzQzMTQ2NzF9.7qHwrz7KL4FRs2rpFQ1uiBmn8No1ZDuHjm4rChoSQBU"
-
+    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJteS11c2VyIiwiaWF0IjoxNzc0MDQ5NDExLCJleHAiOjE3NzQ2NTQyMTF9.nf8paKO4-cv7T1bQtFhIUgDT_GduzDj-krKi324J5-o"
     //get location
     useEffect(() => {
         (async () => {
@@ -108,16 +107,8 @@ export default function IssueCreationScreen() {
         )
     }
 
-    //handle categories
-    const categories = [
-        "Pothole", "Streetlight", "Trash", "Graffiti", "Broken Sidewalk", "Traffic Signal", "Other"
-    ]
     const handleSetCategory = (issueCategory: any) => {
-        if (issueCategory == "Trash") {
-            setCategory("ILLEGAL_DUMPING")
-        } else {
-            setCategory(issueCategory.replace(/ /g, "_").toUpperCase())
-        }
+        setCategory(issueCategory.replace(/ /g, "_").toUpperCase())
     }
 
     //determine if ready to submit
@@ -236,7 +227,7 @@ export default function IssueCreationScreen() {
                 </View>
 
                 <ModalDropdown
-                    data={categories}
+                    data={IssueCategoryArray}
                     onDataSelect={handleSetCategory}
                     defaultText="Choose a category..." />
 

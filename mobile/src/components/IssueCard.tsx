@@ -17,23 +17,20 @@ import {
 } from 'react-native';
 import { globalStyles } from '../styles';
 import { borderRadius, colors, size, spacing, typography } from '../styles';
-import { BrokenIcon, LightBulbIcon, LocationPinIcon, RoadIcon, SprayPaintIcon, TrafficConeIcon, TrafficLightIcon, TrashIcon } from './Icons';
+import { BrokenIcon, ExclamationPointIcon, LightBulbIcon, LocationPinIcon, RoadIcon, SprayPaintIcon, TrafficConeIcon, TrafficLightIcon, TrashIcon, UpvoteIcon } from './Icons';
+import { statusColors } from '../styles/theme';
 
 interface IssueCardProps {
   issue: GetNearbyIssueResponse;
   variant?: 'compact' | 'expanded';
   onPress?: () => void;
+  style?: any;
+  animated?: boolean
 }
 
-const statusColors: Record<string, string> = {
-  reported: colors.statusReported,
-  resolved: colors.statusResolved,
-  default: colors.background,
-};
-
-export default function IssueCard({ issue, variant = 'compact', onPress }: any) {
+export default function IssueCard({ issue, variant = 'compact', onPress, style, animated = true }: IssueCardProps) {
   const scale = useRef(new Animated.Value(1)).current;
-  const [icon, setIcon] = useState(<LocationPinIcon size={typography.sizeLg} color={colors.textPrimary} />)
+  const [icon, setIcon] = useState(<ExclamationPointIcon size={typography.sizeLg} color={colors.textPrimary} style={{ marginRight: spacing.xs }} />)
 
   useEffect(() => {
     if (issue.category == "POTHOLE") {
@@ -52,23 +49,30 @@ export default function IssueCard({ issue, variant = 'compact', onPress }: any) 
     } else if (issue.category == "TRAFFIC_SIGNAL") {
       setIcon(<TrafficLightIcon size={typography.sizeLg} color={colors.textPrimary}
         style={{ marginRight: spacing.xs }} />)
+    } else {
+      setIcon(<ExclamationPointIcon size={typography.sizeLg} color={colors.textPrimary} style={{ marginRight: spacing.xs }} />)
     }
-  }, [])
+  }, [issue])
 
   const handlePressIn = (event: GestureResponderEvent) => {
-    Animated.spring(scale, {
-      toValue: 0.97,
-      useNativeDriver: true,
-    }).start();
+    if (animated) {
+      Animated.spring(scale, {
+        toValue: 0.97,
+        useNativeDriver: true,
+      }).start();
+    }
   };
 
   const handlePressOut = () => {
-    Animated.spring(scale, {
-      toValue: 1,
-      friction: 3,
-      tension: 100,
-      useNativeDriver: true,
-    }).start();
+    if (animated) {
+      Animated.spring(scale, {
+        toValue: 1,
+        friction: 3,
+        tension: 100,
+        useNativeDriver: true,
+      }).start();
+    }
+
   };
 
   const statusColor =
@@ -82,6 +86,7 @@ export default function IssueCard({ issue, variant = 'compact', onPress }: any) 
         globalStyles.card,
         isExpanded ? { height: size.cardExpanded } : { height: size.cardCompact },
         { transform: [{ scale }] },
+        style
       ]}
     >
       <Pressable
@@ -130,18 +135,19 @@ export default function IssueCard({ issue, variant = 'compact', onPress }: any) 
             <View
               style={{
                 ...styles.statusBadge,
-                backgroundColor: statusColor,
+                backgroundColor: statusColor.background
               }}
             >
-              <Text style={styles.statusText}>
-                {issue.status}
+              <Text style={{ ...styles.statusText, color: statusColor.text }}>
+                {issue.status.replace(/_/g, " ")}
               </Text>
             </View>
 
             {/* Upvotes */}
             <View style={styles.upvotes}>
+              <UpvoteIcon color={colors.textPrimary} size={typography.sizeLg} />
               <Text style={styles.upvoteText}>
-                ⬆ {issue.upvoteCount}
+                {issue.upvoteCount}
               </Text>
             </View>
           </View>
@@ -184,12 +190,13 @@ const styles = StyleSheet.create({
   statusBadge: {
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.xs,
-    borderRadius: borderRadius.lg,
+    borderRadius: borderRadius.full,
   },
   statusText: {
-    fontSize: typography.sizeMd,
+    fontSize: typography.sizeSm,
     fontWeight: typography.weightBold,
     color: colors.textPrimary,
+    textAlign: "center"
   },
   upvotes: {
     flexDirection: 'row',

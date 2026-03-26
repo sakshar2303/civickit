@@ -10,7 +10,9 @@ export type IssueCategory =
     | 'OTHER';
 
 export type IssueStatus =
-    | 'OPEN'
+    | 'REPORTED'
+    | 'ACKNOWLEDGED'
     | 'IN_PROGRESS'
     | 'RESOLVED'
+    | 'COMMUNITY_RESOLVED'
     | 'CLOSED';
