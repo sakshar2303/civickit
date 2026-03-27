@@ -1,4 +1,4 @@
-//backend/tests/unit/services/issue.service.test.ts
+// backend/src/services/__tests__/unit/issue.service.test.ts
 
 // TODO: Add validation for latitude/longitude ranges
 // TODO: Add validation for allowed categories (enum)
