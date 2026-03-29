@@ -3,6 +3,7 @@ import { Issue } from "@civickit/shared"
 
 export type StackParams = {
     "Nearby Issues": {},
+    "Issue List": {}
     "Create Issue": {},
     "Issue Details": {
         issue: Issue

@@ -2,7 +2,6 @@
 import * as ImagePicker from 'expo-image-picker';
 import * as Location from 'expo-location';
 import React, { useEffect, useState } from 'react';
-import { MessageView } from '../components/MessageView';
 import { userLocation } from '../types/userLocation';
 import { View, StyleSheet, ScrollView, TextInput, Text, FlatList, TouchableOpacity } from 'react-native';
 import SelectedImage from '../components/SelectedImage';
@@ -16,7 +15,9 @@ import { StackParams } from '../types/StackParams';
 import { borderRadius, colors, globalStyles, spacing, palette, size, typography } from '../styles';
 import Button from '../components/Button';
 import IconButton from '../components/IconButton';
-import { CameraIcon, LocationPinIcon, PictureIcon } from '../components/Icons';
+import { CameraIcon, PictureIcon } from '../components/Icons';
+import LoadingScreen from './LoadingScreen';
+import { IssueCategoryArray } from '../types/IssueCategoryArray';
 
 
 export default function IssueCreationScreen() {
@@ -108,16 +109,8 @@ export default function IssueCreationScreen() {
         )
     }
 
-    //handle categories
-    const categories = [
-        "Pothole", "Streetlight", "Trash", "Graffiti", "Broken Sidewalk", "Traffic Signal", "Other"
-    ]
     const handleSetCategory = (issueCategory: any) => {
-        if (issueCategory == "Trash") {
-            setCategory("ILLEGAL_DUMPING")
-        } else {
-            setCategory(issueCategory.replace(/ /g, "_").toUpperCase())
-        }
+        setCategory(issueCategory.replace(/ /g, "_").toUpperCase())
     }
 
     //determine if ready to submit
@@ -141,9 +134,7 @@ export default function IssueCreationScreen() {
     //display loading if needed after submit
     if (isLoading) {
         return (
-            <MessageView>
-                Loading...
-            </MessageView>
+            <LoadingScreen />
         )
     }
 
@@ -238,7 +229,7 @@ export default function IssueCreationScreen() {
                 </View>
 
                 <ModalDropdown
-                    data={categories}
+                    data={IssueCategoryArray}
                     onDataSelect={handleSetCategory}
                     defaultText="Choose a category..." />
 
