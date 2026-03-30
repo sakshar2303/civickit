@@ -1,5 +1,5 @@
 // mobile/src/screens/IssueDetailScreen.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, use } from 'react';
 import { Platform, Text, ScrollView, FlatList, Image, StyleSheet, View, TouchableOpacity } from 'react-native';
 import { useRoute, RouteProp } from '@react-navigation/native';
 import { Issue } from '@civickit/shared';
@@ -22,6 +22,12 @@ type IssueDetailRouteProp = RouteProp<
   'IssueDetails'
 >;
 
+useEffect(() => {
+  (async () => {
+
+  })();
+}, []);
+
 const IssueDetailScreen = () => {
   const route = useRoute<IssueDetailRouteProp>();
   const { issue } = route.params;
@@ -37,7 +43,7 @@ const IssueDetailScreen = () => {
       setLoading(true);
 
       //DO NOT LEAVE THIS HERE, TESTING PURPOSES ONLY
-      const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWwxcHB4aTQwMDAwbW5pdGVidmNqb2k2IiwiaWF0IjoxNzc0Mjc3OTI0LCJleHAiOjE3NzQ4ODI3MjR9.HZM4EfD7arRk7f2LMSnzo9Pd0e_xL9vt_tBeQeq8LnI";
+      const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWwxcHB4aTQwMDAwbW5pdGVidmNqb2k2IiwiaWF0IjoxNzc0ODg3ODE3LCJleHAiOjE3NzU0OTI2MTd9.xQIfQPFVQ6DCEiebQM_69PMWX2EqFtICMMWnmwchxos";
 
       const method = hasEndorsed ? 'DELETE' : 'POST';
 

@@ -47,11 +47,17 @@ export class UpvoteService {
     };
   }
 
-  async getUpvoteCount(issueId: string, userId: string) {
+  async getUpvoteCount(issueId: string) {
     const upvoteCount = await this.upvoteRepository.countUpvotes(issueId);
-    const hasUpvoted = await this.upvoteRepository.exists(issueId, userId);
 
-    return { upvoteCount, hasUpvoted };
+    return { upvoteCount };
   }
+
+  // async getUpvoteCount(issueId: string, userId: string) {
+  //   const upvoteCount = await this.upvoteRepository.countUpvotes(issueId);
+  //   const hasUpvoted = await this.upvoteRepository.exists(issueId, userId);
+
+  //   return { upvoteCount, hasUpvoted };
+  // }
 
 }
