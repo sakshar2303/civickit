@@ -1,0 +1,115 @@
+// backend/src/services/__tests__/unit/login.service.test.ts
+
+import { LoginService } from '../../login.service';
+import { LoginRepository } from '../../../repositories/login.repository';
+import { describe, beforeEach, vi, it, expect, Mocked, Mock } from 'vitest';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+
+// mock repository
+vi.mock('../../../src/repositories/login.repository');
+
+// mock bcrypt
+vi.mock('bcryptjs', () => ({
+    default: {
+        compare: vi.fn(),
+    },
+}));
+
+// mock jwt
+vi.mock('jsonwebtoken', () => ({
+    default: {
+        sign: vi.fn(),
+    },
+}));
+
+// test login service
+describe('LoginService', () => {
+    let loginService: LoginService;
+    let mockLoginRepository: Mocked<LoginRepository>;
+
+    beforeEach(() => {
+        mockLoginRepository = {
+            findByEmail: vi.fn()
+        } as unknown as Mocked<LoginRepository>;
+
+        loginService = new LoginService(mockLoginRepository);
+        process.env.JWT_SECRET = 'test-secret';
+    });
+
+    const mockUser = () => ({
+        id: '1',
+        email: 'test@example.com',
+        name: 'Test User',
+        passwordHash: 'hashedPassword',
+        profileImage: null,
+        createdAt: new Date(),
+        updatedAt: new Date()
+    });
+
+    it('should login successfully and return token + user', async () => {
+        const user = mockUser();
+
+        mockLoginRepository.findByEmail.mockResolvedValue(user);
+        (bcrypt.compare as any).mockResolvedValue(true);
+        (jwt.sign as any).mockReturnValue('mocked-token');
+
+        const result = await loginService.login({
+            email: 'test@example.com',
+            password: 'password123',
+        });
+
+        expect(mockLoginRepository.findByEmail).toHaveBeenCalledWith('test@example.com');
+
+        expect(bcrypt.compare).toHaveBeenCalledWith(
+            'password123',
+            user.passwordHash
+        );
+
+        expect(jwt.sign).toHaveBeenCalledWith(
+            { userId: user.id },
+            'test-secret',
+            { expiresIn: '7d' }
+        );
+
+        expect(result).toEqual({
+            token: 'mocked-token',
+            user: {
+                id: '1',
+                name: 'Test User',
+                email: 'test@example.com',
+            },
+        });
+    });
+
+    it('should throw error if email not found', async () => {
+        (mockLoginRepository.findByEmail as any).mockResolvedValue(null);
+
+        await expect(
+            loginService.login({
+                email: 'notfound@example.com',
+                password: 'password123',
+            })
+        ).rejects.toEqual({
+            status: 401,
+            message: 'Email not found',
+        });
+    });
+
+    it('should throw error if password does not match', async () => {
+        const user = mockUser();
+
+        mockLoginRepository.findByEmail.mockResolvedValue(user);
+        (bcrypt.compare as any).mockResolvedValue(false);
+
+        await expect(
+            loginService.login({
+                email: 'test@example.com',
+                password: 'wrongpassword',
+            })
+        ).rejects.toEqual({
+            status: 401,
+            message: 'Password and email do not match',
+        });
+    });
+});

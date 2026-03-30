@@ -1,0 +1,112 @@
+// backend/src/services/__tests__/unit/auth.service.test.ts
+
+import { AuthService } from '../../auth.service';
+import { AuthRepository } from '../../../repositories/auth.repository';
+import { describe, beforeEach, vi, it, expect, Mocked } from 'vitest';
+import bcrypt from 'bcryptjs';
+
+// mock repository
+vi.mock('../../../src/repositories/auth.repository');
+
+// mock bcrypt
+vi.mock('bcryptjs', () => ({
+    default: {
+        hash: vi.fn(),
+    },
+}));
+
+// test auth service
+describe('AuthService', () => {
+    let authService: AuthService;
+    let mockAuthRepository: Mocked<AuthRepository>;
+
+    beforeEach(() => {
+        mockAuthRepository = {
+            findByEmail: vi.fn(),
+            createUser: vi.fn(),
+        } as unknown as Mocked<AuthRepository>;
+
+        authService = new AuthService(mockAuthRepository);
+    });
+
+    it('should register a user successfully', async () => {
+        mockAuthRepository.findByEmail.mockResolvedValue(null);
+
+        (bcrypt.hash as any).mockResolvedValue('hashedPassword');
+
+        mockAuthRepository.createUser.mockResolvedValue({
+            id: '1',
+            email: 'test@example.com',
+            name: 'Test User',
+            passwordHash: 'hashedPassword',
+            profileImage: null,
+            createdAt: new Date(),
+            updatedAt: new Date()
+        });
+
+        const result = await authService.registerUser({
+            email: 'test@example.com',
+            password: 'password123',
+            name: 'Test User',
+        });
+
+        expect(result).toMatchObject({
+            id: '1',
+            email: 'test@example.com',
+            name: 'Test User',
+        });
+
+        expect(mockAuthRepository.findByEmail).toHaveBeenCalledWith('test@example.com');
+        expect(bcrypt.hash).toHaveBeenCalledWith('password123', 10);
+        expect(mockAuthRepository.createUser).toHaveBeenCalled();
+    });
+
+    it('should throw error for invalid email', async () => {
+        await expect(
+            authService.registerUser({
+                email: 'bad-email',
+                password: 'password123',
+                name: 'Test',
+            })
+        ).rejects.toEqual({
+            status: 400,
+            message: 'Invalid email format',
+        });
+    });
+
+    it('should throw error for short password', async () => {
+        await expect(
+            authService.registerUser({
+                email: 'test@example.com',
+                password: 'short',
+                name: 'Test',
+            })
+        ).rejects.toEqual({
+            status: 400,
+            message: 'Password too short (min 8 characters)',
+        });
+    });
+
+    it('should throw error if email already exists', async () => {
+        mockAuthRepository.findByEmail.mockResolvedValue({
+            id: '1',
+            email: 'test@example.com',
+            name: 'Existing User',
+            passwordHash: 'hashed',
+            profileImage: null,
+            createdAt: new Date(),
+            updatedAt: new Date()
+        });
+
+        await expect(
+            authService.registerUser({
+                email: 'test@example.com',
+                password: 'password123',
+                name: 'Test',
+            })
+        ).rejects.toEqual({
+            status: 409,
+            message: 'Email already exists',
+        });
+    });
+});
