@@ -15,6 +15,7 @@
     "@react-native-masked-view/masked-view": "0.3.2",
     "@react-native-vector-icons/evil-icons": "^12.4.1",
     "@react-native-vector-icons/fontawesome6": "^12.3.1",
+    "@react-navigation/bottom-tabs": "^7.15.9",
     "@react-navigation/native": "^7.1.27",
     "@react-navigation/native-stack": "^7.9.1",
     "@react-navigation/stack": "^7.8.2",
@@ -50,6 +51,7 @@
     "react-native-svg": "15.12.1",
     "react-native-web": "^0.21.0",
     "react-native-worklets": "^0.5.1",
+    "react-navigation-selective-tab-bar": "^1.0.3",
     "tunnel": "^0.0.6"
   },
   "devDependencies": {

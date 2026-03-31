@@ -237,3 +237,39 @@ export function RightArrowIcon(props: IconProps) {
             style={props.style} />
     )
 }
+
+export function PlusIcon(props: IconProps) {
+    return (
+        <AntDesign name="plus"
+            color={props.color}
+            size={props.size}
+            style={props.style} />
+    )
+}
+
+export function SearchIcon(props: IconProps) {
+    return (
+        <Feather name="search"
+            color={props.color}
+            size={props.size}
+            style={props.style} />
+    )
+}
+
+export function CalendarIcon(props: IconProps) {
+    return (
+        <Feather name="calendar"
+            color={props.color}
+            size={props.size}
+            style={props.style} />
+    )
+}
+
+export function UserIcon(props: IconProps) {
+    return (
+        <Feather name="user"
+            color={props.color}
+            size={props.size}
+            style={props.style} />
+    )
+}
