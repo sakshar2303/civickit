@@ -24,7 +24,7 @@ export default function MapViewScreen({ issues, refetch }: any) {
     const [currentIssue, setCurrentIssue] = useState<GetNearbyIssueResponse | undefined>(undefined)
     const fadeAnim = useAnimatedValue(0);
     const posAnim = useAnimatedValue(0);
-    const [paddingBottom, setPaddingBottom] = useState("130%")
+    const [paddingBottom, setPaddingBottom] = useState("110%")
 
     //get contexts from above layer(s)
     const location = useContext(LocationContext) as unknown as userLocation
@@ -48,12 +48,14 @@ export default function MapViewScreen({ issues, refetch }: any) {
             duration: 200,
             useNativeDriver: true,
         }).start(({ finished }) => {
-            callback()
+            if (callback != undefined) {
+                callback()
+            }
         });
     };
     const moveCallout = (toIndex: number, toPosition: number) => {
         if (toIndex != 2) {
-            setPaddingBottom("130%")
+            setPaddingBottom("110%")
             Animated.timing(posAnim, {
                 toValue: toPosition - 132,
                 duration: 200,
@@ -61,7 +63,7 @@ export default function MapViewScreen({ issues, refetch }: any) {
             }).start(({ finished }) => {
             })
         } else {
-            setPaddingBottom("20%")
+            setPaddingBottom("10%")
         }
 
     }

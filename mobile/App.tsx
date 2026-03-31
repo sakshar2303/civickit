@@ -28,10 +28,11 @@ export default function App() {
             <Tab.Navigator screenOptions={{
               tabBarStyle: {
                 backgroundColor: colors.background,
-                height: size.x4l,
+                height: size.navBar,
               },
               tabBarShowLabel: false,
               animation: "shift",
+              tabBarActiveBackgroundColor: colors.backgroundSecondary
             }}>
               <Tab.Screen name="Map" component={LandingScreen}
                 options={{
@@ -67,11 +68,6 @@ export default function App() {
                       />
                     </View>
                   ),
-                }}
-                listeners={{
-                  tabPress: e => {
-                    e.preventDefault();
-                  },
                 }} />
               <Tab.Screen name="Events" component={EventsScreen}
                 options={{
@@ -92,7 +88,6 @@ export default function App() {
                       style={styles.icon}
                     />
                   ),
-
                 }} />
             </Tab.Navigator>
             <FlashMessage position="top" style={{ paddingTop: 32 }} />
@@ -126,6 +121,6 @@ const styles = StyleSheet.create({
     height: size.xxl,
     width: size.xxl,
     textAlign: "center",
-    textAlignVertical: "center"
+    textAlignVertical: "center",
   }
 });

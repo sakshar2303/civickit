@@ -96,6 +96,7 @@ export const size = {
     cardExpanded: 120,
     longButton: 200,
     imageLg: 340,
+    navBar: 88
 };
 
 export const statusColors: Record<string, { background: string, stroke: string, text: string }> = {
