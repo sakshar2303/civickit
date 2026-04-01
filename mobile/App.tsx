@@ -28,19 +28,20 @@ export default function App() {
             <Tab.Navigator screenOptions={{
               tabBarStyle: {
                 backgroundColor: colors.background,
-                height: size.navBar,
               },
               tabBarShowLabel: false,
               animation: "shift",
-              tabBarActiveBackgroundColor: colors.backgroundSecondary
-            }}>
+              tabBarActiveBackgroundColor: colors.backgroundSecondary,
+              headerTitleAlign: "left"
+            }}
+            >
               <Tab.Screen name="Map" component={LandingScreen}
                 options={{
                   tabBarIcon: () => (
                     <LocationPinIcon
                       color={colors.textPrimary}
                       size={size.lg}
-                      style={styles.icon}
+                      style={{ ...styles.icon, ...styles.navIcons }}
                     />
                   ),
                   headerShown: false
@@ -51,7 +52,7 @@ export default function App() {
                     <SearchIcon
                       color={colors.textPrimary}
                       size={size.lg}
-                      style={styles.icon}
+                      style={{ ...styles.icon, ...styles.navIcons }}
                     />
                   ),
                 }} />
@@ -75,7 +76,7 @@ export default function App() {
                     <CalendarIcon
                       color={colors.textPrimary}
                       size={size.lg}
-                      style={styles.icon}
+                      style={{ ...styles.icon, ...styles.navIcons }}
                     />
                   ),
                 }} />
@@ -85,7 +86,7 @@ export default function App() {
                     <UserIcon
                       color={colors.textPrimary}
                       size={size.lg}
-                      style={styles.icon}
+                      style={{ ...styles.icon, ...styles.navIcons }}
                     />
                   ),
                 }} />
@@ -118,9 +119,16 @@ const styles = StyleSheet.create({
     ...globalStyles.shadow
   },
   icon: {
+    display: "flex",
     height: size.xxl,
     width: size.xxl,
     textAlign: "center",
-    textAlignVertical: "center",
+    justifyContent: "center",
+    alignContent: "center",
+    alignItems: "center",
+    marginTop: spacing.sd,
+  },
+  navIcons: {
+    paddingTop: spacing.xs
   }
 });

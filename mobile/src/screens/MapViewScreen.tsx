@@ -19,7 +19,7 @@ import { GetNearbyIssueResponse } from '@civickit/shared';
 export default function MapViewScreen({ issues, refetch }: any) {
     const navigation = useNavigation<StackNavigationProp<StackParams>>();
     const bottomSheetRef = useRef<BottomSheet>(null);
-    const snapPoints = [36, "30%", "78%"]
+    const snapPoints = [36, "30%", "80%"]
     const [bottomSheetPos, setBottomSheetPos] = useState<String | number>(36);
     const [currentIssue, setCurrentIssue] = useState<GetNearbyIssueResponse | undefined>(undefined)
     const fadeAnim = useAnimatedValue(0);

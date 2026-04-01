@@ -186,7 +186,7 @@ export function ExclamationPointIcon(props: IconProps) {
 
 export function RefreshIcon(props: IconProps) {
     return (
-        <EvilIcons name="refresh"
+        <Ionicons name="refresh-sharp"
             color={props.color}
             size={props.size}
             style={props.style} />

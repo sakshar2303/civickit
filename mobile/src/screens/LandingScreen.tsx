@@ -24,6 +24,7 @@ export default function App() {
             headerTitleStyle: {
                 fontWeight: typography.weightRegular,
             },
+            headerTitleAlign: "left"
 
         }}
         >
