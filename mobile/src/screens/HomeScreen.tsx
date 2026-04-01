@@ -166,14 +166,15 @@ const styles = StyleSheet.create({
     overlay: {
         position: "absolute",
         flexDirection: "row",
-        justifyContent: "space-between",
+        // justifyContent: "space-between",
         alignItems: "flex-start",
         width: "100%",
+        margin: spacing.sm,
+        columnGap: spacing.sm,
     },
     buttonCol: {
         flexDirection: "row",
         width: "auto",
-        margin: spacing.sm,
         columnGap: spacing.sm,
         justifyContent: "flex-end",
     },
