@@ -1,11 +1,12 @@
 // mobile/src/screens/IssueDetailScreen.tsx
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect, use } from 'react';
 import { Platform, Text, ScrollView, FlatList, Image, StyleSheet, View, TouchableOpacity } from 'react-native';
 import { useRoute, RouteProp } from '@react-navigation/native';
 import { GetNearbyIssueResponse, Issue } from '@civickit/shared';
 import { format, formatDistanceToNow } from 'date-fns';
 import { CategoryIcon, ClockIcon, LocationPinIcon, TagIcon, WrenchIcon } from '../components/Icons';
 import { borderRadius, colors, palette, size, spacing, typography } from '../styles';
+import ENV from '../config/env';
 import Pin from '../components/Pin';
 
 let MapView: any = null;
@@ -22,9 +23,52 @@ type IssueDetailRouteProp = RouteProp<
   'IssueDetails'
 >;
 
+useEffect(() => {
+  (async () => {
+
+  })();
+}, []);
+
 const IssueDetailScreen = () => {
   const route = useRoute<IssueDetailRouteProp>();
   const { issue } = route.params;
+
+  const [hasEndorsed, setHasEndorsed] = useState(false);
+  const [upvoteCount, setUpvoteCount] = useState(issue.upvoteCount ?? 0);
+  const [loading, setLoading] = useState(false);
+
+  const handleEndorse = async () => {
+    if (loading) return;
+
+    try {
+      setLoading(true);
+
+      //DO NOT LEAVE THIS HERE, TESTING PURPOSES ONLY
+      const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWwxcHB4aTQwMDAwbW5pdGVidmNqb2k2IiwiaWF0IjoxNzc0ODg3ODE3LCJleHAiOjE3NzU0OTI2MTd9.xQIfQPFVQ6DCEiebQM_69PMWX2EqFtICMMWnmwchxos";
+
+      const method = hasEndorsed ? 'DELETE' : 'POST';
+
+      const res = await fetch(
+        `${ENV.apiUrl}/issues/${issue.id}/upvote`,
+        {
+          method,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = await res.json();
+
+      setHasEndorsed(data.upvoted);
+      setUpvoteCount(data.upvoteCount);
+
+    } catch (err) {
+      console.error('Endorse failed:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const [category, setCategory] = useState<String>(issue.category.replace(/_/g, " ").toLowerCase())
 
@@ -40,7 +84,7 @@ const IssueDetailScreen = () => {
 
           <View style={styles.countBadge}>
             <Text style={styles.countLabel}>count</Text>
-            <Text style={styles.countValue}>{issue.upvoteCount ?? 0}</Text>
+            <Text style={styles.countValue}>{upvoteCount}</Text>
           </View>
         </View>
 
@@ -140,9 +184,9 @@ const IssueDetailScreen = () => {
         </Text>
       </ScrollView>
 
-      {/* Bottom Action Button */}
-      <TouchableOpacity style={styles.endorseButton} >
-        <Text style={styles.endorseText}>Endorse</Text>
+      {/* Upvote / Endorse Button */}
+      <TouchableOpacity style={styles.endorseButton} onPress={handleEndorse}>
+        <Text style={styles.endorseText}>{hasEndorsed ? 'Endorsed ✓' : 'Endorse'}</Text>
       </TouchableOpacity>
     </View>
   );
