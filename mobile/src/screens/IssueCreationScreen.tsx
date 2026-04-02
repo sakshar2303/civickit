@@ -7,7 +7,7 @@ import { View, StyleSheet, ScrollView, TextInput, Text, FlatList, TouchableOpaci
 import SelectedImage from '../components/SelectedImage';
 import ModalDropdown from '../components/ModalDropdown';
 import ENV from '../config/env';
-import { useNavigation, } from '@react-navigation/native';
+import { useFocusEffect, useNavigation, } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { showMessage } from "react-native-flash-message";
@@ -176,6 +176,9 @@ export default function IssueCreationScreen() {
                 color: colors.textContrast
             });
             const issue = await response.json()
+            setImages([])
+            setTitle("")
+            setDescription("")
             navigation.navigate('Issue Details', { issue: issue })
 
         } catch (error: any) {
