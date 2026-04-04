@@ -65,7 +65,7 @@ function MainTabNavigator() {
           ),
         }} />
 
-      <Tab.Screen name="Report An Issue" component={IssueCreationNav}
+      <Tab.Screen name="ReportIssue" component={IssueCreationNav}
         options={{
           tabBarIcon: () => (
             <View
