@@ -13,7 +13,7 @@ const uploadSignatureLimiter = rateLimit({
 });
 
 // Get a signed upload token for direct Cloudinary uploads
-// This is used by mobile apps to securely upload images without exposing credentials
+// This is used by mobile apps to securely upload images without exposing credentials and rate limits
 router.post('/signature', authMiddleware, uploadSignatureLimiter, uploadController.getUploadSignature);
 
 export default router;
