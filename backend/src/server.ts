@@ -6,7 +6,7 @@ import express from 'express';
 import cors from 'cors';
 import issueRoutes from './routes/issue.routes';
 import authRoutes from "./routes/auth.routes";
-
+import uploadRoutes from './routes/upload.routes';
 import loginRoutes from './routes/login.routes';
 import RateLimit from 'express-rate-limit';
 import { authMiddleware } from './middleware/auth.middleware';
@@ -37,13 +37,14 @@ const limiter = RateLimit({
   windowMs: 15 * 60 * 1000, //15 minutes
   max: 100, //max 100 requests per window
 })
-//app.use(limiter)
+app.use(limiter)
 
 // Routes
 // TODO: Add routes
 app.use('/api/issues', issueRoutes);
 app.use('/api/auth/login', loginRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/upload', uploadRoutes);
 app.use('/api/issues/upvote', authMiddleware);
 
 // Error handling
