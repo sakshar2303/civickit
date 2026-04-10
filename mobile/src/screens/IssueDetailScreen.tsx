@@ -6,9 +6,10 @@ import { GetNearbyIssueResponse, Issue } from '@civickit/shared';
 import { format, formatDistanceToNow } from 'date-fns';
 import { CategoryIcon, ClockIcon, LocationPinIcon, TagIcon, WrenchIcon } from '../components/Icons';
 import { borderRadius, colors, palette, size, spacing, typography } from '../styles';
+import { useAuth } from '../contexts/AuthContext';
+import { PROVIDER_GOOGLE } from 'react-native-maps/lib/ProviderConstants';
 import ENV from '../config/env';
 import Pin from '../components/Pin';
-import { useAuth } from '../contexts/AuthContext';
 
 let MapView: any = null;
 let Marker: any = null;
@@ -178,6 +179,7 @@ const IssueDetailScreen = () => {
         {Platform.OS !== 'web' && MapView && Marker ? (
           <MapView
             style={styles.map}
+            provider={PROVIDER_GOOGLE}
             initialRegion={{
               latitude: issue.latitude,
               longitude: issue.longitude,
