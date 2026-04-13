@@ -93,7 +93,7 @@ export const globalStyles = StyleSheet.create({
         elevation: 2,
         shadowColor: palette.ckDark,
         shadowOpacity: 0.25,
-        shadowRadius: 4,
+        shadowRadius: 2,
         shadowOffset: { width: 0, height: 4 },
 
     },
