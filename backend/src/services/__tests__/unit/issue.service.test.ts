@@ -44,6 +44,7 @@ describe('IssueService', () => {
     title: 'Test Issue',
     description: 'Test Description',
     category: 'POTHOLE',
+    status: 'REPORTED',
     latitude: 38.627,
     longitude: -90.1994,
     address: "",

@@ -17,4 +17,7 @@ router.post('/:issueId/upvote', authMiddleware, upvoteController.upvote); // cre
 router.get('/:issueId/upvote', authMiddleware, upvoteController.getUpvotes) // get upvote count {read}
 router.delete('/:issueId/upvote', authMiddleware, upvoteController.removeUpvote); // remove upvote {delete}
 
+// update issue status
+router.patch('/:issueId/status', authMiddleware, issueController.updateStatus);
+
 export default router;
