@@ -10,7 +10,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { StackParams } from '../types/StackParams';
 import { FlashlightOffIcon, FlashlightOnIcon, FlipCameraIcon, LightingFillIcon, LightingOutlineIcon, PictureIcon } from '../components/Icons';
 import IconButton from '../components/IconButton';
-import { ImagesContext } from './IssueCreationNav';
+import { ImagesContext } from '../types/FormContexts';
 
 
 export default function CameraScreen() {
@@ -91,6 +91,9 @@ export default function CameraScreen() {
             />
 
             <View style={styles.lowerButtonRow}>
+
+
+
                 <IconButton onPress={() => { setEnableTorch(!enableTorch) }} style={{
                     ...styles.roundButton,
                 }}>
@@ -103,6 +106,7 @@ export default function CameraScreen() {
                     )}
 
                 </IconButton>
+
                 <IconButton onPress={pickImage} style={{
                     ...styles.squareButton,
                 }}>
@@ -169,8 +173,6 @@ const styles = StyleSheet.create({
     squareButton: {
         height: 60,
         width: 60,
-
-        bottom: spacing.xs,
         borderRadius: borderRadius.md,
         backgroundColor: palette.ckDark,
         opacity: 0.8

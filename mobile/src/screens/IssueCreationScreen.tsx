@@ -21,7 +21,7 @@ import IconButton from '../components/IconButton';
 import SelectedImage from '../components/SelectedImage';
 import ModalDropdown from '../components/ModalDropdown';
 import ENV from '../config/env';
-import { AddressContext, CategoryContext, DescriptionContext, ImagesContext, TitleContext, UserLocationContext } from './IssueCreationNav';
+import { ImagesContext, UserLocationContext, AddressContext, TitleContext, CategoryContext, DescriptionContext } from '../types/FormContexts';
 
 export default function IssueCreationScreen() {
     const { images, setImages } = useContext(ImagesContext);

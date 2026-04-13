@@ -10,14 +10,9 @@ import PhotoValidationScreen from './PhotoValidationScreen';
 import CameraScreen from './CameraScreen';
 import { userLocation } from '../types/userLocation';
 import { createContext, useState } from 'react';
-const Stack = createNativeStackNavigator<StackParams>();
+import { ImagesContext, UserLocationContext, AddressContext, TitleContext, CategoryContext, DescriptionContext } from '../types/FormContexts';
 
-export const ImagesContext = createContext({ images: [], setImages: (images: string[]) => { } })
-export const UserLocationContext = createContext({ location: { latitude: 0, longitude: 0 }, setLocation: (location: userLocation | null) => { } })
-export const AddressContext = createContext({ address: 'Detecting location...', setAddress: (address: string) => { } })
-export const TitleContext = createContext({ title: "", setTitle: (title: string) => { } })
-export const CategoryContext = createContext({ category: null, setCategory: (category: any) => { } })
-export const DescriptionContext = createContext({ description: "", setDescription: (description: string) => { } })
+const Stack = createNativeStackNavigator<StackParams>();
 
 export default function IssueCreationNav() {
 

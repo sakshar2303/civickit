@@ -9,7 +9,8 @@ import { Image } from "react-native";
 import { StaticScreenProps, useFocusEffect, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { StackParams } from '../types/StackParams';
-import { ImagesContext } from './IssueCreationNav';
+import { ImagesContext } from '../types/FormContexts';
+
 import React from 'react';
 
 type Props = StaticScreenProps<{
