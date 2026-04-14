@@ -1,7 +1,7 @@
 // backend/src/services/issue.service.ts
 
 import { IssueRepository } from '../repositories/issue.repository';
-import { CreateIssueDTO } from '@civickit/shared';
+import { CreateIssueDTO, IssueStatus } from '@civickit/shared';
 import { uploadImage } from '../utils/cloudinary';
 import { UpvoteRepository } from '../repositories/upvote.repository';
 import { is } from 'zod/v4/locales';
@@ -22,7 +22,7 @@ export class IssueService {
 
     // Images are already URLs from Cloudinary, provided by the client
     // Just save the issue with the image URLs
-    return this.issueRepository.create({ ...data, userId });
+    return this.issueRepository.create({ ...data, userId, status: 'REPORTED' });
   }
 
   async getNearbyIssues(lat: number, lng: number, radius?: number) {
@@ -56,5 +56,11 @@ export class IssueService {
       ...issue,
       upvoteCount,
     };
+  }
+
+  // update status tag
+  async updateStatus(id: string, status: IssueStatus) {
+    // TODO: add user restrictions here for role based access control
+    return this.issueRepository.updateStatus(id, { status });
   }
 }

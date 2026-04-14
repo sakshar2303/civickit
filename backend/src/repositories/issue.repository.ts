@@ -1,6 +1,6 @@
 // backend/src/repositories/issue.repository.ts
 import prisma from "../prisma";
-import { CreateIssueDTO, Issue } from '@civickit/shared';
+import { CreateIssueDTO, Issue, IssueStatus } from '@civickit/shared';
 
 export class IssueRepository {
   async create(data: CreateIssueDTO & { userId: string }) {
@@ -9,8 +9,13 @@ export class IssueRepository {
         title: data.title,
         description: data.description,
         category: data.category,
+        status: data.status,
         latitude: data.latitude,
         longitude: data.longitude,
+        address: data.address,
+        district: data.district,
+        subregion: data.subregion,
+        name: data.name,
         images: data.images,
         userId: data.userId,
       },
@@ -83,6 +88,14 @@ export class IssueRepository {
           },
         },
       },
+    });
+  }
+
+  // update issue status
+  async updateStatus(id: string, data: Partial<{ status: IssueStatus }>) {
+    return prisma.issue.update({
+      where: { id },
+      data,
     });
   }
 }
