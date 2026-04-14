@@ -15,11 +15,29 @@ declare global {
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
 
   try {
+    // get and check auth header
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader) {
+      return res.status(401).json({ error: 'Authorization header missing' });
+    }
+
+    if (!authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ error: 'Invalid auth format' });
+    }
+
     //get token from Authorization: Bearer header
-    const token = String(req.headers.authorization?.substring(7))
+    const token = authHeader.split(' ')[1];
+    if (!token) {
+      return res.status(401).json({ error: 'Token missing' });
+    }
 
     //Verify Token
     const secret = String(process.env.JWT_SECRET)
+    if (!secret) {
+      return res.status(500).json({ error: 'JWT secret not configured' });
+    }
+
     const tokenResponse = jwt.verify(token, secret) as JwtPayload
 
     //attach userId to request
@@ -29,8 +47,7 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
     next()
 
   } catch (error) {
-    throw error
+    return res.status(401).json({ error: 'Invalid or expired token' });
   }
-
 
 };

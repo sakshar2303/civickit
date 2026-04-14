@@ -149,7 +149,7 @@ const IssueDetailScreen = () => {
               size={typography.sizeLg}
               style={styles.icon} />
             <Text style={styles.infoRowText}>
-              Tags
+              {issue.status}
             </Text>
           </View>
 

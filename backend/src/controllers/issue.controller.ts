@@ -55,4 +55,14 @@ export class IssueController {
       next(error);
     }
   }
+
+  // update issue status
+  async updateStatus(req: Request, res: Response, next: NextFunction) {
+    try {
+      const issue = await issueService.updateStatus(String(req.params.issueId), req.body.status);
+      res.json(issue);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
