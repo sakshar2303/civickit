@@ -9,6 +9,9 @@ export interface Issue {
     latitude: number;
     longitude: number;
     address: string;
+    district?: string;
+    subregion?: string;
+    name?: string;
     images: string[];
     cityRefNumber?: string;
     upvoteCount: number;

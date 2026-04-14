@@ -13,6 +13,7 @@ import { StackParams } from '../types/StackParams';
 import { borderRadius, colors, globalStyles, spacing, palette, size, typography } from '../styles';
 import { CameraIcon, PictureIcon } from '../components/Icons';
 import { IssueCategoryArray } from '../types/IssueCategoryArray';
+import { extractResolvedLocationMetadata, formatResolvedAddress, ResolvedLocationMetadata } from '../hooks/useResolvedAddress';
 import { useAuth } from '../contexts/AuthContext';
 
 import LoadingScreen from './LoadingScreen';
@@ -27,6 +28,7 @@ export default function IssueCreationScreen() {
     const [images, setImages] = useState<string[]>([]);
     const [location, setLocation] = useState<userLocation | null>(null);
     const [address, setAddress] = useState<string>('Detecting location...');
+    const [locationMetadata, setLocationMetadata] = useState<ResolvedLocationMetadata>({});
     const [title, setTitle] = useState<string>("");
     const [category, setCategory] = useState<"POTHOLE" | "STREETLIGHT" | "GRAFFITI" | "ILLEGAL_DUMPING" | "BROKEN_SIDEWALK" | "TRAFFIC_SIGNAL" | "OTHER">();
     const [description, setDescription] = useState<string>("");
@@ -55,12 +57,11 @@ export default function IssueCreationScreen() {
 
             //reverseGeocodeAsync does not work on web, will return []
             if (geocode.length > 0) {
-                if (geocode[0].street != null) {
-                    setAddress(`${geocode[0].street}, ${geocode[0].city}`);
-                } else {
-                    setAddress(`${geocode[0].city}`);
+                const formattedAddress = formatResolvedAddress(geocode[0]);
+                if (formattedAddress) {
+                    setAddress(formattedAddress);
                 }
-                console.log(`${geocode[0].street}, ${geocode[0].city}`)
+                setLocationMetadata(extractResolvedLocationMetadata(geocode[0]));
             }
         })();
     }, []);
@@ -141,6 +142,17 @@ export default function IssueCreationScreen() {
 
     const handleSubmit = async () => {
         try {
+            const formData = new FormData();
+            formData.append('title', title);
+            formData.append('description', description);
+            formData.append('category', category!);
+            formData.append('latitude', location!.latitude.toString());
+            formData.append('longitude', location!.longitude.toString());
+            formData.append('address', address);
+            images.forEach(uri => {
+                formData.append('images', { uri: uri, type: 'image/jpeg', name: 'photo.jpg' } as unknown as File);
+            });
+
             if (!authToken) {
                 navigation.navigate('Error', { errorMessage: 'Not authenticated' });
                 throw new Error('No auth token available');
@@ -181,6 +193,10 @@ export default function IssueCreationScreen() {
                 category: category!,
                 latitude: location!.latitude,
                 longitude: location!.longitude,
+                address,
+                district: locationMetadata.district,
+                subregion: locationMetadata.subregion,
+                name: locationMetadata.name,
                 images: imageUrls
             };
 
