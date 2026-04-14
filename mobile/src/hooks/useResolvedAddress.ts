@@ -7,6 +7,24 @@ export type LocationSource = {
   priority?: 'exif' | 'gps' | 'fallback'; // extensible for future sources
 };
 
+//this function takes the raw reversed geocoded location object from expo and turns it into one clean, human-readable string
+export function formatResolvedAddress(
+  address: Pick<
+    Location.LocationGeocodedAddress,
+    'streetNumber' | 'street' | 'city' | 'region' | 'postalCode'
+  >
+): string {
+  const { streetNumber, street, city, region, postalCode } = address;
+  const parts = [
+    streetNumber && street ? `${streetNumber} ${street}` : street,
+    city,
+    region,
+    postalCode,
+  ].filter(Boolean);
+
+  return parts.join(', ');
+}
+
 /**
  * Resolves a human-readable address from one or more location sources.
  * Sources are tried in order — first one that resolves wins.
@@ -32,14 +50,9 @@ export function useResolvedAddress(sources: LocationSource[]): string {
           if (cancelled) return;
 
           if (geocode.length > 0) {
-            const { streetNumber, street, city, region, postalCode} = geocode[0];
-            const parts = [
-                streetNumber && street ? `${streetNumber} ${street}` : street, 
-                city, 
-                region, 
-                postalCode,].filter(Boolean);
-            if (parts.length > 0) {
-              setAddress(parts.slice(0, 4).join(', '));
+            const formattedAddress = formatResolvedAddress(geocode[0]);
+            if (formattedAddress) {
+              setAddress(formattedAddress);
               return; // first successful resolution wins
             }
           }

@@ -13,6 +13,7 @@ import { StackParams } from '../types/StackParams';
 import { borderRadius, colors, globalStyles, spacing, palette, size, typography } from '../styles';
 import { CameraIcon, PictureIcon } from '../components/Icons';
 import { IssueCategoryArray } from '../types/IssueCategoryArray';
+import { formatResolvedAddress } from '../hooks/useResolvedAddress';
 import { useAuth } from '../contexts/AuthContext';
 
 import LoadingScreen from './LoadingScreen';
@@ -55,12 +56,10 @@ export default function IssueCreationScreen() {
 
             //reverseGeocodeAsync does not work on web, will return []
             if (geocode.length > 0) {
-                if (geocode[0].street != null) {
-                    setAddress(`${geocode[0].street}, ${geocode[0].city}`);
-                } else {
-                    setAddress(`${geocode[0].city}`);
+                const formattedAddress = formatResolvedAddress(geocode[0]);
+                if (formattedAddress) {
+                    setAddress(formattedAddress);
                 }
-                console.log(`${geocode[0].street}, ${geocode[0].city}`)
             }
         })();
     }, []);
@@ -192,6 +191,7 @@ export default function IssueCreationScreen() {
                 category: category!,
                 latitude: location!.latitude,
                 longitude: location!.longitude,
+                address,
                 images: imageUrls
             };
 
