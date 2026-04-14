@@ -11,6 +11,9 @@ export interface CreateIssueDTO {
     latitude: number;
     longitude: number;
     address: string;
+    district?: string;
+    subregion?: string;
+    name?: string;
     images?: string[];
 }
 export interface GetNearbyIssueResponse {
@@ -20,6 +23,9 @@ export interface GetNearbyIssueResponse {
     latitude: number;
     longitude: number;
     address: string;
+    district?: string;
+    subregion?: string;
+    name?: string;
     images: string[];
     id: string;
     createdAt: string;

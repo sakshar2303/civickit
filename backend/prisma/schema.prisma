@@ -65,6 +65,9 @@ model Issue {
   latitude    Float
   longitude   Float
   address     String?
+  district    String?
+  subregion   String?
+  name        String?
   
   // Media
   images      String[]      // Array of Cloudinary URLs

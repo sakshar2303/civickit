@@ -13,7 +13,7 @@ import { StackParams } from '../types/StackParams';
 import { borderRadius, colors, globalStyles, spacing, palette, size, typography } from '../styles';
 import { CameraIcon, PictureIcon } from '../components/Icons';
 import { IssueCategoryArray } from '../types/IssueCategoryArray';
-import { formatResolvedAddress } from '../hooks/useResolvedAddress';
+import { extractResolvedLocationMetadata, formatResolvedAddress, ResolvedLocationMetadata } from '../hooks/useResolvedAddress';
 import { useAuth } from '../contexts/AuthContext';
 
 import LoadingScreen from './LoadingScreen';
@@ -28,6 +28,7 @@ export default function IssueCreationScreen() {
     const [images, setImages] = useState<string[]>([]);
     const [location, setLocation] = useState<userLocation | null>(null);
     const [address, setAddress] = useState<string>('Detecting location...');
+    const [locationMetadata, setLocationMetadata] = useState<ResolvedLocationMetadata>({});
     const [title, setTitle] = useState<string>("");
     const [category, setCategory] = useState<"POTHOLE" | "STREETLIGHT" | "GRAFFITI" | "ILLEGAL_DUMPING" | "BROKEN_SIDEWALK" | "TRAFFIC_SIGNAL" | "OTHER">();
     const [description, setDescription] = useState<string>("");
@@ -60,6 +61,7 @@ export default function IssueCreationScreen() {
                 if (formattedAddress) {
                     setAddress(formattedAddress);
                 }
+                setLocationMetadata(extractResolvedLocationMetadata(geocode[0]));
             }
         })();
     }, []);
@@ -192,6 +194,9 @@ export default function IssueCreationScreen() {
                 latitude: location!.latitude,
                 longitude: location!.longitude,
                 address,
+                district: locationMetadata.district,
+                subregion: locationMetadata.subregion,
+                name: locationMetadata.name,
                 images: imageUrls
             };
 

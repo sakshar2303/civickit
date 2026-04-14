@@ -7,6 +7,24 @@ export type LocationSource = {
   priority?: 'exif' | 'gps' | 'fallback'; // extensible for future sources
 };
 
+//if we want to add more data points in the future (e.g. country, timezone, etc.)
+//this data is good to keep for data analytics
+export type ResolvedLocationMetadata = {
+  district?: string;
+  subregion?: string;
+  name?: string;
+};
+
+export function extractResolvedLocationMetadata(
+  address: Pick<Location.LocationGeocodedAddress, 'district' | 'subregion' | 'name'>
+): ResolvedLocationMetadata {
+  return {
+    district: address.district || undefined,
+    subregion: address.subregion || undefined,
+    name: address.name || undefined,
+  };
+}
+
 //this function takes the raw reversed geocoded location object from expo and turns it into one clean, human-readable string
 export function formatResolvedAddress(
   address: Pick<
