@@ -281,6 +281,9 @@ export function RecenterIcon(props: IconProps) {
             size={props.size}
             style={props.style}
         />
+    )
+}
+
 export function FlipCameraIcon(props: IconProps) {
     return (
         <MaterialIcons name="flip-camera-android"
