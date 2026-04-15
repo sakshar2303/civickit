@@ -11,6 +11,9 @@ export interface Issue {
     latitude: number;
     longitude: number;
     address: string;
+    district?: string;
+    subregion?: string;
+    name?: string;
     images: string[];          // Cloudinary URLs
     cityRefNumber?: string;
     upvoteCount: number;

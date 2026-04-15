@@ -1,18 +1,19 @@
 //mobile/src/screens/IssueCreationScreen.tsx
 import * as ImagePicker from 'expo-image-picker';
 import * as Location from 'expo-location';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { userLocation } from '../types/userLocation';
 import { uploadImagesToCloudinary } from '../services/cloudinaryService';
 import { View, StyleSheet, ScrollView, TextInput, Text, FlatList, TouchableOpacity } from 'react-native';
-import { useFocusEffect, useNavigation, } from '@react-navigation/native';
+import { StaticScreenProps, useFocusEffect, useNavigation, } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { showMessage } from "react-native-flash-message";
 import { StackParams } from '../types/StackParams';
 import { borderRadius, colors, globalStyles, spacing, palette, size, typography } from '../styles';
-import { CameraIcon, PictureIcon } from '../components/Icons';
+import { CameraIcon, PictureIcon, PlusIcon } from '../components/Icons';
 import { IssueCategoryArray } from '../types/IssueCategoryArray';
+import { extractResolvedLocationMetadata, formatResolvedAddress, ResolvedLocationMetadata } from '../hooks/useResolvedAddress';
 import { useAuth } from '../contexts/AuthContext';
 
 import LoadingScreen from './LoadingScreen';
@@ -21,21 +22,21 @@ import IconButton from '../components/IconButton';
 import SelectedImage from '../components/SelectedImage';
 import ModalDropdown from '../components/ModalDropdown';
 import ENV from '../config/env';
-
+import { ImagesContext, UserLocationContext, AddressContext, TitleContext, CategoryContext, DescriptionContext } from '../types/FormContexts';
 
 export default function IssueCreationScreen() {
-    const [images, setImages] = useState<string[]>([]);
-    const [location, setLocation] = useState<userLocation | null>(null);
-    const [address, setAddress] = useState<string>('Detecting location...');
-    const [title, setTitle] = useState<string>("");
-    const [category, setCategory] = useState<"POTHOLE" | "STREETLIGHT" | "GRAFFITI" | "ILLEGAL_DUMPING" | "BROKEN_SIDEWALK" | "TRAFFIC_SIGNAL" | "OTHER">();
-    const [description, setDescription] = useState<string>("");
+    const { images, setImages } = useContext(ImagesContext);
+    const { location, setLocation } = useContext(UserLocationContext);
+    const { address, setAddress } = useContext(AddressContext);
+    const { title, setTitle } = useContext(TitleContext);
+    const { category, setCategory } = useContext(CategoryContext);
+    const { description, setDescription } = useContext(DescriptionContext);
+    const [locationMetadata, setLocationMetadata] = useState<ResolvedLocationMetadata>({});
     const [submitAllowed, setSubmitAllowed] = useState<boolean>(false)
 
     const [isLoading, setIsLoading] = useState(false)
     const navigation = useNavigation<StackNavigationProp<StackParams>>()
     const { authToken } = useAuth();
-    //TODO: implement tags
 
     //get location
     useEffect(() => {
@@ -55,54 +56,14 @@ export default function IssueCreationScreen() {
 
             //reverseGeocodeAsync does not work on web, will return []
             if (geocode.length > 0) {
-                if (geocode[0].street != null) {
-                    setAddress(`${geocode[0].street}, ${geocode[0].city}`);
-                } else {
-                    setAddress(`${geocode[0].city}`);
+                const formattedAddress = formatResolvedAddress(geocode[0]);
+                if (formattedAddress) {
+                    setAddress(formattedAddress);
                 }
-                console.log(`${geocode[0].street}, ${geocode[0].city}`)
+                setLocationMetadata(extractResolvedLocationMetadata(geocode[0]));
             }
         })();
     }, []);
-
-    //handle images
-    const pickImage = async () => {
-        if (images.length < 5) {
-            const results = await ImagePicker.launchImageLibraryAsync({
-                mediaTypes: ['images'],
-                quality: 0.8,
-                allowsMultipleSelection: true,
-                selectionLimit: 5 - images.length
-            })
-            if (!results.canceled) {
-                //does not work on web, retruns unusable uri
-                const resultList = results.assets.map(r => r.uri)
-                setImages([...images, ...resultList]);
-            }
-        }
-
-    };
-
-    const openCamera = async () => {
-        console.log("Opening camera")
-        const { status } = await ImagePicker.requestCameraPermissionsAsync();
-
-        if (status !== 'granted') {
-            alert("Camera permission denied");
-            return;
-        }
-
-        if (images.length < 5) {
-            const result = await ImagePicker.launchCameraAsync({
-                mediaTypes: ['images'],
-                quality: 0.8,
-            });
-            //does not work on web, retruns unusable uri
-            if (!result.canceled) {
-                setImages([...images, result.assets[0].uri]);
-            }
-        }
-    };
 
     const onImageDeletePressed = (image: any) => {
         setImages(
@@ -139,8 +100,31 @@ export default function IssueCreationScreen() {
         )
     }
 
+    const handleCancel = () => {
+        setImages([])
+        setLocation(null)
+        setAddress('Detecting location...')
+        setTitle("")
+        setCategory(null)
+        setDescription("")
+
+
+        navigation.popTo("Camera", {})
+    }
+
     const handleSubmit = async () => {
         try {
+            const formData = new FormData();
+            formData.append('title', title);
+            formData.append('description', description);
+            formData.append('category', category!);
+            formData.append('latitude', location!.latitude.toString());
+            formData.append('longitude', location!.longitude.toString());
+            formData.append('address', address);
+            images.forEach(uri => {
+                formData.append('images', { uri: uri, type: 'image/jpeg', name: 'photo.jpg' } as unknown as File);
+            });
+
             if (!authToken) {
                 navigation.navigate('Error', { errorMessage: 'Not authenticated' });
                 throw new Error('No auth token available');
@@ -181,6 +165,10 @@ export default function IssueCreationScreen() {
                 category: category!,
                 latitude: location!.latitude,
                 longitude: location!.longitude,
+                address,
+                district: locationMetadata.district,
+                subregion: locationMetadata.subregion,
+                name: locationMetadata.name,
                 images: imageUrls
             };
 
@@ -211,9 +199,13 @@ export default function IssueCreationScreen() {
                 color: colors.textContrast
             });
             const issue = await response.json();
-            setImages([]);
-            setTitle("");
-            setDescription("");
+            setImages([])
+            setLocation(null)
+            setAddress('Detecting location...')
+            setTitle("")
+            setCategory(null)
+            setDescription("")
+            navigation.replace("Camera", {})
             navigation.navigate('Issue Details', { issue: issue });
 
         } catch (error: any) {
@@ -245,25 +237,36 @@ export default function IssueCreationScreen() {
                     style={styles.titleTextBox}
                     maxLength={100} />
 
-                <ScrollView contentContainerStyle={styles.imageContainer}>
-                    <PictureIcon color={colors.textMuted}
-                        size={size.imageLg} style={[styles.defaultImage,
-                        images.length > 0 ? { display: "none" } : { display: "flex" }]} />
+                <View style={styles.imageContainer}>
 
-                    <FlatList
-                        data={images}
-                        horizontal
-                        keyExtractor={(item, index) => index.toString()}
-                        renderItem={({ item }) => (
-                            <SelectedImage source={item}
-                                width={size.imageLg}
-                                height={size.imageLg}
-                                onDeletePressed={onImageDeletePressed}
-                                style={{ marginHorizontal: spacing.sm }}
-                            />
-                        )}
-                    />
-                </ScrollView>
+                    <ScrollView >
+                        <PictureIcon color={colors.textMuted}
+                            size={size.imageLg} style={[styles.defaultImage,
+                            images.length > 0 ? { display: "none" } : { display: "flex" }]} />
+
+                        <FlatList
+                            data={images}
+                            horizontal
+                            style={{ alignSelf: "center" }}
+                            keyExtractor={(item, index) => index.toString()}
+                            renderItem={({ item }) => (
+                                <SelectedImage source={item}
+                                    width={size.imageLg}
+                                    height={size.imageLg}
+                                    onDeletePressed={onImageDeletePressed}
+                                    style={{ marginHorizontal: spacing.sm }}
+                                />
+                            )}
+                        />
+                    </ScrollView>
+
+                    <IconButton onPress={() => { navigation.navigate("Camera", { uri: images }) }}
+                        style={images.length < 5 ? styles.photoButton : styles.disabledPhotoButton}
+                        isDisabled={images.length >= 5}>
+                        <PlusIcon color={colors.textContrast}
+                            size={size.xl} />
+                    </IconButton>
+                </View>
 
                 <View style={styles.addressContainer}>
                     <Text style={styles.addressText}>{address}</Text>
@@ -279,28 +282,24 @@ export default function IssueCreationScreen() {
                     placeholder='Issue Description...'
                     style={styles.descTextBox}
                     multiline
-                    numberOfLines={7}
+                    numberOfLines={5}
                     maxLength={500}
                     focusable
                 />
             </KeyboardAwareScrollView>
 
             <View style={styles.buttonRow}>
-                <IconButton onPress={openCamera} style={styles.photoButton}>
-                    <CameraIcon color={colors.textContrast}
-                        size={size.lg} />
-                </IconButton>
+
+                <Button onPress={handleCancel}
+                    style={{ ...styles.submitButton, backgroundColor: palette.ckRed }}
+                    text="Cancel">
+                </Button>
 
                 <Button onPress={handleSubmit}
                     style={styles.submitButton}
                     isDisabled={!submitAllowed}
                     text="Submit">
                 </Button>
-
-                <IconButton onPress={pickImage} style={styles.photoButton}>
-                    <PictureIcon color={colors.textContrast}
-                        size={size.lg} />
-                </IconButton>
             </View>
         </>
 
@@ -323,7 +322,8 @@ const styles = StyleSheet.create({
         alignContent: "center",
         paddingVertical: spacing.sm,
         gap: spacing.sm,
-        height: "auto"
+        height: "auto",
+
     },
     defaultImage: {
         alignSelf: "center",
@@ -336,10 +336,20 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         width: "100%",
         position: "absolute",
-        bottom: spacing.xxxl,
+        bottom: spacing.lg,
     },
     photoButton: {
         backgroundColor: palette.ckBlue,
+        position: "absolute",
+        bottom: spacing.sm,
+        right: spacing.sm,
+        ...globalStyles.shadow
+    },
+    disabledPhotoButton: {
+        backgroundColor: palette.ckMediumGray,
+        position: "absolute",
+        bottom: spacing.sm,
+        right: spacing.sm,
         ...globalStyles.shadow
     },
     submitButton: {
