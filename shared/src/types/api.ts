@@ -12,6 +12,7 @@ export interface CreateIssueDTO {
     title: string;
     description: string;
     category: IssueCategory;
+    status: IssueStatus;
     latitude: number;
     longitude: number;
     address: string;
